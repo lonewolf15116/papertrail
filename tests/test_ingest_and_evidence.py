@@ -143,6 +143,10 @@ def test_squash_ignores_hyphens_and_spacing():
     assert squash("memory-\nefficient  Training") == squash("memoryefficient training")
 
 
+def test_squash_expands_ligatures():  # PDF text and viewer copies use U+FB01 / U+FB02
+    assert squash("pro\ufb01ling the o\ufb04ine bound") == squash("profiling the offline bound")
+
+
 # --- Heading layouts seen in the real corpus -------------------------------------------------
 
 from papertrail.ingest import Line, split_sections  # noqa: E402
@@ -205,3 +209,20 @@ def test_pseudocode_and_table_numbers_rejected():  # Gruslys pseudocode, 8-bit "
 def test_small_bold_figure_labels_are_not_headings():
     titles = _titles([("1 Introduction", 12.0, True), ("2 Memory Ratio", 6.0, True)])
     assert titles == ["1 Introduction"]
+
+
+def test_quote_pages_and_fix_pages(tmp_path):
+    from papertrail.eval.evidence import fix_pages, quote_pages
+
+    pdf = tmp_path / "toy.pdf"
+    make_paper(pdf)
+    assert quote_pages(pdf, "Appendix text about optimal schedules stays in the corpus") == [4]
+    assert quote_pages(pdf, "this sentence does not appear anywhere in it") == []
+    q = GoldQuestion(
+        id="q",
+        question="?",
+        kind="factual",
+        evidence=[Evidence(paper_id="toy", page=1, quote="Appendix text about optimal schedules")],
+    )
+    changes = fix_pages([q], tmp_path)
+    assert q.evidence[0].page == 4 and changes == ["q: toy page 1 -> 4"]

@@ -10,7 +10,7 @@ hand-labelled question set, and CI fails the build if quality regresses.
 
 | Milestone | Scope | Status |
 |---|---|---|
-| 1. Corpus + gold set | 24 papers, 60–100 labelled questions incl. unanswerable and cross-paper | 23 papers ingested (1,077 chunks); 27 draft questions to verify |
+| 1. Corpus + gold set | 24 papers, 60–100 labelled questions incl. unanswerable and cross-paper | 23 papers ingested (1,077 chunks); 74 draft questions to verify |
 | 2. Retrieval ablations | BM25 → vectors → hybrid (RRF) → cross-encoder rerank; recall@5, MRR | not started |
 | 3. Grounded answers | FastAPI `/ask` with paper/page/section citations and a refusal path | stub |
 | 4. Ship | Docker Compose, CI quality gate, deployment, p50/p95 latency and cost | CI + Docker in place |

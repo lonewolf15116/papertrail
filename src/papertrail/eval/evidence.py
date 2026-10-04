@@ -6,7 +6,9 @@ A quote that spans a chunk boundary counts for every chunk holding a large enoug
 """
 
 import re
+import unicodedata
 from collections.abc import Iterable
+from pathlib import Path
 
 from papertrail.schemas import Chunk, Evidence, GoldQuestion
 
@@ -14,7 +16,9 @@ MIN_PIECE = 40  # alphanumeric chars a chunk must share with a boundary-spanning
 
 
 def squash(text: str) -> str:
-    return re.sub(r"[^a-z0-9]", "", text.lower())
+    # NFKC turns ligatures (U+FB01 "fi", U+FB02 "fl") back into letters; PDFs and PDF viewers
+    # both emit them, so dropping them as non-alphanumeric would turn "profiling" into "proling".
+    return re.sub(r"[^a-z0-9]", "", unicodedata.normalize("NFKC", text).lower())
 
 
 class EvidenceIndex:
@@ -51,3 +55,38 @@ class EvidenceIndex:
                 elif not self.resolve(e):
                     problems.append(f"{q.id}: quote not found in {e.paper_id}: {e.quote[:60]!r}")
         return problems
+
+
+def quote_pages(pdf_path: Path, quote: str) -> list[int]:
+    """Pages (1-based) of the PDF whose text contains the quote, or the page where it starts
+    when it runs across a page break. Empty if the quote is not in the PDF at all."""
+    import pymupdf
+
+    q = squash(quote)
+    head = q[: min(len(q), MIN_PIECE)]
+    with pymupdf.open(pdf_path) as doc:  # type: ignore[no-untyped-call]
+        pages = [squash(page.get_text()) for page in doc]
+    whole = [i + 1 for i, text in enumerate(pages) if q in text]
+    if whole:
+        return whole
+    for i in range(len(pages) - 1):  # spans a page break
+        if q in pages[i] + pages[i + 1] and head in pages[i]:
+            return [i + 1]
+    return []
+
+
+def fix_pages(questions: list[GoldQuestion], pdf_dir: Path) -> list[str]:
+    """Set each evidence page to the page the quote actually starts on. Returns change notes."""
+    changes = []
+    for q in questions:
+        for e in q.evidence:
+            pdf = pdf_dir / f"{e.paper_id}.pdf"
+            if not pdf.exists():
+                continue
+            pages = quote_pages(pdf, e.quote)
+            if pages and e.page not in pages:
+                changes.append(f"{q.id}: {e.paper_id} page {e.page} -> {pages[0]}")
+                e.page = pages[0]
+            elif not pages:
+                changes.append(f"{q.id}: quote not found in {pdf.name} (left page {e.page})")
+    return changes

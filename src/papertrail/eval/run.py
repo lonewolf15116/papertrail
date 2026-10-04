@@ -22,6 +22,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="papertrail-eval")
     parser.add_argument("--gold", type=Path, default=Path("data/gold/questions.jsonl"))
     parser.add_argument("--chunks", type=Path, help="chunks.jsonl; checks every quote is found")
+    parser.add_argument(
+        "--fix-pages",
+        type=Path,
+        metavar="PDF_DIR",
+        help="rewrite each evidence page to where the quote really is in the PDF",
+    )
     parser.add_argument("--results", type=Path, help="metrics JSON from this run")
     parser.add_argument("--baseline", type=Path, help="metrics JSON to gate against")
     args = parser.parse_args(argv)
@@ -33,6 +39,18 @@ def main(argv: list[str] | None = None) -> int:
         f"gold set OK: {len(gold)} questions, {len(verified)} verified {dict(kinds)}, "
         f"{len(gold) - len(verified)} drafts (drafts are not scored)"
     )
+
+    if args.fix_pages:
+        from papertrail.eval.evidence import fix_pages
+
+        changes = fix_pages(gold, args.fix_pages)
+        for line in changes:
+            print(f"PAGE {line}")
+        args.gold.write_text(
+            "".join(q.model_dump_json(exclude_none=True) + "\n" for q in gold),
+            encoding="utf-8",
+        )
+        print(f"{len(changes)} page changes written to {args.gold}")
 
     if args.chunks:
         from papertrail.ingest import load_chunks
