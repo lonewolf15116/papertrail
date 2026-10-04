@@ -18,13 +18,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+ingest = ["pymupdf>=1.24"]
 # Installed in milestone 2 (retrieval), kept out of the base image until then.
 retrieval = [
     "psycopg[binary]>=3.2",
     "pgvector>=0.3",
     "rank-bm25>=0.2",
     "sentence-transformers>=3.0",
-    "pymupdf>=1.24",
 ]
 dev = [
     "pytest>=8.0",
@@ -33,10 +33,12 @@ dev = [
     "ruff>=0.6",
     "mypy>=1.10",
     "types-PyYAML",
+    "pymupdf>=1.24",
 ]
 
 [project.scripts]
 papertrail-eval = "papertrail.eval.run:main"
+papertrail-ingest = "papertrail.ingest:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/papertrail"]
@@ -56,3 +58,7 @@ addopts = "-q"
 python_version = "3.11"
 strict = true
 files = ["src/papertrail"]
+
+[[tool.mypy.overrides]]
+module = ["pymupdf", "pymupdf.*"]
+ignore_missing_imports = true

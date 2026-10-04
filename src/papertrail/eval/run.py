@@ -10,8 +10,10 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+from papertrail.eval.evidence import EvidenceIndex
 from papertrail.eval.gate import check_regression
 from papertrail.eval.gold import load_gold
+from papertrail.schemas import LabelStatus
 
 DEFAULT_MARGINS = {"recall@5": 0.02, "mrr": 0.02, "faithfulness": 0.03}
 
@@ -19,13 +21,29 @@ DEFAULT_MARGINS = {"recall@5": 0.02, "mrr": 0.02, "faithfulness": 0.03}
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="papertrail-eval")
     parser.add_argument("--gold", type=Path, default=Path("data/gold/questions.jsonl"))
+    parser.add_argument("--chunks", type=Path, help="chunks.jsonl; checks every quote is found")
     parser.add_argument("--results", type=Path, help="metrics JSON from this run")
     parser.add_argument("--baseline", type=Path, help="metrics JSON to gate against")
     args = parser.parse_args(argv)
 
     gold = load_gold(args.gold)
-    kinds = Counter(q.kind.value for q in gold)
-    print(f"gold set OK: {len(gold)} questions {dict(kinds)}")
+    verified = [q for q in gold if q.status is LabelStatus.VERIFIED]
+    kinds = Counter(q.kind.value for q in verified)
+    print(
+        f"gold set OK: {len(gold)} questions, {len(verified)} verified {dict(kinds)}, "
+        f"{len(gold) - len(verified)} drafts (drafts are not scored)"
+    )
+
+    if args.chunks:
+        from papertrail.ingest import load_chunks
+
+        index = EvidenceIndex(load_chunks(args.chunks))
+        problems = index.unresolved(q for q in gold if not q.id.startswith("tmpl-"))
+        for line in problems:
+            print(f"UNRESOLVED {line}")
+        if problems:
+            return 1
+        print("every evidence quote was found in the corpus")
 
     if args.results and args.baseline:
         current = json.loads(args.results.read_text())

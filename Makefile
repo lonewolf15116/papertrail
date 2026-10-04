@@ -1,4 +1,4 @@
-.PHONY: install lint test eval up down
+.PHONY: install lint test ingest eval up down
 
 install:
 	pip install -e ".[dev]"
@@ -9,8 +9,11 @@ lint:
 test:
 	pytest
 
+ingest:
+	papertrail-ingest
+
 eval:
-	papertrail-eval --gold data/gold/questions.jsonl
+	papertrail-eval --gold data/gold/questions.jsonl $(if $(wildcard data/processed/chunks.jsonl),--chunks data/processed/chunks.jsonl,)
 
 up:
 	docker compose up --build -d

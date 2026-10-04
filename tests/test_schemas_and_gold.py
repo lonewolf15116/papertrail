@@ -19,14 +19,38 @@ def test_refusal_needs_reason():
         AskResponse(status=AnswerStatus.REFUSED)
 
 
-def test_unanswerable_cannot_have_gold_chunks():
+EV = {"paper_id": "dtr2021", "page": 3, "quote": "a sufficiently long verbatim quote"}
+
+
+def test_unanswerable_cannot_have_evidence():
     with pytest.raises(ValidationError):
-        GoldQuestion(id="q", question="??", kind="unanswerable", gold_chunk_ids=["a"])
+        GoldQuestion(id="q", question="??", kind="unanswerable", evidence=[EV])
+
+
+def test_answerable_needs_evidence():
+    with pytest.raises(ValidationError):
+        GoldQuestion(id="q", question="??", kind="factual")
 
 
 def test_cross_paper_needs_distractors():
     with pytest.raises(ValidationError):
-        GoldQuestion(id="q", question="??", kind="cross_paper", gold_chunk_ids=["a"])
+        GoldQuestion(id="q", question="??", kind="cross_paper", evidence=[EV])
+
+
+def test_paper_cannot_be_gold_and_distractor():
+    with pytest.raises(ValidationError):
+        GoldQuestion(
+            id="q",
+            question="??",
+            kind="cross_paper",
+            evidence=[EV],
+            distractor_paper_ids=["dtr2021"],
+        )
+
+
+def test_status_defaults_to_verified():
+    q = GoldQuestion(id="q", question="??", kind="factual", evidence=[EV])
+    assert q.status == "verified" and q.gold_paper_ids == ["dtr2021"]
 
 
 def test_repo_gold_set_is_valid():

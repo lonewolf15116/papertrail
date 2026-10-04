@@ -1,10 +1,19 @@
-# Corpus manifest. Target: ~25 ML-systems papers. PDFs go in data/corpus/pdf/ (git-ignored).
-# Check each arXiv id before downloading. `group` marks papers that share terminology but make
-# different claims; those groups are where the adversarial cross-paper questions come from.
+# Corpus manifest: 24 ML-systems papers. PDFs go in data/corpus/pdf/<id>.pdf (git-ignored).
+# `python scripts/download_corpus.py` fetches every paper with an `arxiv` id.
+# Papers with `manual: true` are not on arXiv: download them yourself and save as <id>.pdf.
+#
+# `group` marks papers that share terminology but make different claims. Cross-paper
+# questions come from inside a group (e.g. "checkpointing" means different things in
+# Chen 2016, Checkmate and DTR).
 papers:
+  # --- Rematerialization / checkpointing -------------------------------------------
   - id: chen2016-sublinear
     title: Training Deep Nets with Sublinear Memory Cost
     arxiv: "1604.06174"
+    group: rematerialization
+  - id: gruslys2016-bptt
+    title: Memory-Efficient Backpropagation Through Time
+    arxiv: "1606.03401"
     group: rematerialization
   - id: checkmate2020
     title: "Checkmate: Breaking the Memory Wall with Optimal Tensor Rematerialization"
@@ -18,10 +27,43 @@ papers:
     title: "Capuchin: Tensor-based GPU Memory Management for Deep Learning"
     venue: ASPLOS 2020
     group: rematerialization
+    manual: true
+  - id: monet2021
+    title: "MONeT: Memory Optimization for Deep Networks"
+    arxiv: "2010.14501"
+    group: rematerialization
+  - id: korthikanti2022-selective
+    title: Reducing Activation Recomputation in Large Transformer Models
+    arxiv: "2205.05198"
+    group: rematerialization
+  - id: coop2023
+    title: "Coop: Memory is not a Commodity"
+    arxiv: "2311.00591"
+    group: rematerialization
+  - id: rockmate2023
+    title: "Rockmate: an Efficient, Fast, Automatic and Generic Tool for Re-materialization in PyTorch"
+    arxiv: "2307.01236"
+    group: rematerialization
+  - id: superneurons2018
+    title: "SuperNeurons: Dynamic GPU Memory Management for Training Deep Neural Networks"
+    arxiv: "1801.04380"
+    group: rematerialization
+
+  # --- Offloading -------------------------------------------------------------------
   - id: vdnn2016
     title: "vDNN: Virtualized Deep Neural Networks for Scalable, Memory-Efficient Neural Network Design"
     arxiv: "1602.08124"
     group: offloading
+  - id: zero-offload2021
+    title: "ZeRO-Offload: Democratizing Billion-Scale Model Training"
+    arxiv: "2101.06840"
+    group: offloading
+  - id: zero-infinity2021
+    title: "ZeRO-Infinity: Breaking the GPU Memory Wall for Extreme Scale Deep Learning"
+    arxiv: "2104.07857"
+    group: offloading
+
+  # --- Distributed / parallel training ---------------------------------------------
   - id: zero2020
     title: "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models"
     arxiv: "1910.02054"
@@ -30,8 +72,41 @@ papers:
     title: "GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism"
     arxiv: "1811.06965"
     group: distributed
+  - id: pipedream2018
+    title: "PipeDream: Fast and Efficient Pipeline Parallel DNN Training"
+    arxiv: "1806.03377"
+    group: distributed
+  - id: pipedream2bw2021
+    title: Memory-Efficient Pipeline-Parallel DNN Training
+    arxiv: "2006.09503"
+    group: distributed
   - id: megatron2019
     title: "Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism"
     arxiv: "1909.08053"
     group: distributed
-  # TODO: add ~17 more (e.g. other rematerialization/offloading, mixed precision, activation compression)
+  - id: megatron2021
+    title: Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM
+    arxiv: "2104.04473"
+    group: distributed
+  - id: fsdp2023
+    title: "PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel"
+    arxiv: "2304.11277"
+    group: distributed
+
+  # --- Precision, compression and kernels ------------------------------------------
+  - id: mixed-precision2018
+    title: Mixed Precision Training
+    arxiv: "1710.03740"
+    group: precision
+  - id: actnn2021
+    title: "ActNN: Reducing Training Memory Footprint via 2-Bit Activation Compressed Training"
+    arxiv: "2104.14129"
+    group: precision
+  - id: 8bit-optim2022
+    title: 8-bit Optimizers via Block-wise Quantization
+    arxiv: "2110.02861"
+    group: precision
+  - id: flashattention2022
+    title: "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness"
+    arxiv: "2205.14135"
+    group: precision

@@ -14,8 +14,8 @@ class Settings(BaseSettings):
     llm_model: str = "claude-haiku-4-5-20251001"
     top_k: int = 5
     rerank_candidates: int = 20
-    chunk_tokens: int = 400
-    chunk_overlap: int = 50
+    chunk_words: int = 300
+    chunk_overlap_words: int = 50
 
 
 @lru_cache

@@ -57,14 +57,32 @@ class QuestionKind(StrEnum):
     CROSS_PAPER = "cross_paper"  # similar terminology, different claims across papers
 
 
+class Evidence(BaseModel):
+    """A supporting passage, labelled by its words rather than by chunk id.
+
+    Chunk ids change whenever chunking changes (size, overlap, section rules), which would break
+    every label during a chunk-size ablation. A quote does not, so the harness resolves each
+    quote to whichever chunks contain it at evaluation time.
+    """
+
+    paper_id: str
+    page: int = Field(ge=1)
+    quote: str = Field(min_length=20, description="Verbatim span copied from the paper")
+
+
+class LabelStatus(StrEnum):
+    VERIFIED = "verified"  # checked against the paper by a person
+    DRAFT = "draft"  # proposed (e.g. by Claude), not yet checked; excluded from scoring
+
+
 class GoldQuestion(BaseModel):
     """One hand-labelled evaluation item."""
 
     id: str
     question: str
     kind: QuestionKind
-    gold_chunk_ids: list[str] = Field(default_factory=list)
-    gold_paper_ids: list[str] = Field(default_factory=list)
+    status: LabelStatus = LabelStatus.VERIFIED
+    evidence: list[Evidence] = Field(default_factory=list)
     reference_answer: str | None = None
     distractor_paper_ids: list[str] = Field(
         default_factory=list,
@@ -72,13 +90,20 @@ class GoldQuestion(BaseModel):
     )
     notes: str | None = None
 
+    @property
+    def gold_paper_ids(self) -> list[str]:
+        return sorted({e.paper_id for e in self.evidence})
+
     @model_validator(mode="after")
     def _labels_match_kind(self) -> "GoldQuestion":
         if self.kind is QuestionKind.UNANSWERABLE:
-            if self.gold_chunk_ids:
-                raise ValueError(f"{self.id}: unanswerable questions must have no gold chunks")
-        elif not self.gold_chunk_ids:
-            raise ValueError(f"{self.id}: answerable questions need at least one gold chunk")
-        if self.kind is QuestionKind.CROSS_PAPER and not self.distractor_paper_ids:
-            raise ValueError(f"{self.id}: cross-paper questions need distractor_paper_ids")
+            if self.evidence:
+                raise ValueError(f"{self.id}: unanswerable questions must have no evidence")
+        elif not self.evidence:
+            raise ValueError(f"{self.id}: answerable questions need at least one evidence quote")
+        if self.kind is QuestionKind.CROSS_PAPER:
+            if not self.distractor_paper_ids:
+                raise ValueError(f"{self.id}: cross-paper questions need distractor_paper_ids")
+            if set(self.distractor_paper_ids) & set(self.gold_paper_ids):
+                raise ValueError(f"{self.id}: a paper cannot be both gold and distractor")
         return self
