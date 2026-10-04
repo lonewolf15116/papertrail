@@ -17,3 +17,6 @@ data/corpus/pdf/
 data/processed/
 results/*.json
 !results/baseline.json
+
+# Downloaded model weights
+models/
