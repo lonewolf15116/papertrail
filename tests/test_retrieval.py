@@ -218,3 +218,10 @@ def test_bm25_header_adds_paper_identity():
     assert headed.name == "bm25_header"
     assert headed.retrieve("memory optimizations", 1)[0].chunk_id == "zero:0"
     assert plain.retrieve("memory optimizations", 1)[0].chunk_id != "zero:0"
+
+
+def test_ci_runs_the_database_tests():
+    """On GitHub Actions the pgvector service must be configured, so the database tests above
+    can never be skipped silently in CI."""
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        assert DB_URL, "PAPERTRAIL_TEST_DATABASE_URL must be set in CI"
