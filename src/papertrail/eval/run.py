@@ -28,6 +28,12 @@ def main(argv: list[str] | None = None) -> int:
         metavar="PDF_DIR",
         help="rewrite each evidence page to where the quote really is in the PDF",
     )
+    parser.add_argument(
+        "--apply-reviews",
+        type=Path,
+        metavar="REVIEWS_JSON",
+        help="apply verdicts exported from the review page ({id: review}) to the gold file",
+    )
     parser.add_argument("--results", type=Path, help="metrics JSON from this run")
     parser.add_argument("--baseline", type=Path, help="metrics JSON to gate against")
     args = parser.parse_args(argv)
@@ -39,6 +45,19 @@ def main(argv: list[str] | None = None) -> int:
         f"gold set OK: {len(gold)} questions, {len(verified)} verified {dict(kinds)}, "
         f"{len(gold) - len(verified)} drafts (drafts are not scored)"
     )
+
+    if args.apply_reviews:
+        from papertrail.eval.review import apply_reviews
+
+        gold, report = apply_reviews(gold, json.loads(args.apply_reviews.read_text()))
+        args.gold.write_text(
+            "".join(q.model_dump_json(exclude_none=True) + "\n" for q in gold),
+            encoding="utf-8",
+        )
+        print(
+            f"reviews applied: {len(report.verified)} verified, {len(report.rejected)} rejected, "
+            f"{len(report.needs_fix)} need fixes, {len(report.edited)} edited"
+        )
 
     if args.fix_pages:
         from papertrail.eval.evidence import fix_pages
