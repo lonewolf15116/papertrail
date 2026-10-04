@@ -23,14 +23,19 @@ from pathlib import Path
 
 from papertrail.schemas import Chunk
 
-HEADING_NUMBERED = re.compile(
-    r"^(?:\d+(?:\.\d+){0,2}\.?|[A-H](?:\.\d+){0,2}\.?)\s+[A-Z][^.!?]{1,90}$"
-)
+# "4.1 Problem definition", "3.4. Phase 3: rk-Rotor.", "A Proof of Theorem 3.1", "6.4 Are ...?".
+# Top-level numbers stop at 19 so figure axis labels ("30 RAM used (GB)") never qualify.
+SECTION_NUMBER = r"(?:(?:[1-9]|1\d)(?:\.\d+){0,2}\.?|[A-H](?:\.\d+){0,2}\.?)"
+HEADING_NUMBERED = re.compile(rf"^({SECTION_NUMBER})\s+([A-Z0-9\u221a(].{{1,90}})$")
 HEADING_NAMED = re.compile(
     r"^(abstract|introduction|related work|background|conclusions?|discussion|"
     r"acknowledge?ments?|references|bibliography|appendix(?:\s+[a-z])?)$",
     re.IGNORECASE,
 )
+# IEEE style: "I. INTRODUCTION", "IV. EVALUATION METHODOLOGY" (often not bold, same size as body).
+HEADING_ROMAN = re.compile(r"^(?:[IVX]{1,5})\.\s+[A-Z][A-Z0-9 ,:&/\-]{2,80}$")
+# A section number alone on its line; many templates (ICLR, MLSys) put the title on the next line.
+NUMBER_ONLY = re.compile(rf"^{SECTION_NUMBER}$")
 STOP_SECTIONS = re.compile(r"^(references|bibliography)$", re.IGNORECASE)
 APPENDIX_START = re.compile(r"^(appendix\b|[A-H](?:\.\d+)*\.?\s+[A-Z])", re.IGNORECASE)
 
@@ -126,19 +131,123 @@ def is_heading(ln: Line, body: float) -> bool:
     text = ln.text.strip()
     if len(text.split()) > 12 or len(text) < 3:
         return False
+    if ln.size < body - 0.5:  # figure labels, tick marks, footnotes
+        return False
+    if HEADING_ROMAN.match(text):
+        return True
+    if text.endswith((",", ";")):
+        return False
+    numbered = HEADING_NUMBERED.match(text)
+    if numbered and _all_caps(numbered.group(2)):  # ICLR subsections: "A.1 NETWORK DEFINITION"
+        return True
     emphasized = ln.bold or ln.size >= body + 0.8
     if not emphasized:
         return False
-    return bool(HEADING_NUMBERED.match(text) or HEADING_NAMED.match(text))
+    return bool(numbered or HEADING_NAMED.match(text))
+
+
+def _all_caps(text: str) -> bool:
+    letters = [c for c in text if c.isalpha()]
+    return len(letters) > 3 and all(c.isupper() for c in letters)
+
+
+def merge_split_headings(lines: list[Line], body: float) -> list[Line]:
+    """Join a bare section number ("4.1") with the title on the following line."""
+    out: list[Line] = []
+    i = 0
+    while i < len(lines):
+        ln = lines[i]
+        nxt = lines[i + 1] if i + 1 < len(lines) else None
+        if (
+            nxt is not None
+            and NUMBER_ONLY.match(ln.text.strip())
+            and ln.size >= body - 0.5
+            and nxt.page == ln.page
+            and 1 <= len(nxt.text.split()) <= 12
+            and nxt.text[:1].isupper()
+        ):
+            out.append(
+                Line(
+                    f"{ln.text.strip()} {nxt.text.strip()}",
+                    ln.page,
+                    max(ln.size, nxt.size),
+                    ln.bold or nxt.bold,
+                    ln.in_margin,
+                )
+            )
+            i += 2
+            continue
+        out.append(ln)
+        i += 1
+    return out
+
+
+def clean_title(title: str) -> str:
+    """'1 INTRODUCTION' -> '1 Introduction', so citations read naturally."""
+    title = title.rstrip(".")
+    if _all_caps(title):
+        head, _, rest = title.partition(" ")
+        if re.fullmatch(r"[\dIVX.A-H]+", head):
+            return f"{head} {rest.capitalize()}"
+        return title.capitalize()
+    return title
+
+
+AFFILIATION = re.compile(
+    r"univ|institut|\binc\b|\blabs?\b|technolog|research|corporation|college|google|"
+    r"microsoft|nvidia|facebook|meta ai|deepmind|@",
+    re.IGNORECASE,
+)
+INTRO_LIKE = re.compile(r"introduction|background|overview|motivation", re.IGNORECASE)
+
+
+class _Order:
+    """Section numbers must run roughly in order.
+
+    Rejects pseudocode line numbers ("1 Order of execution" inside section 3), table values
+    ("9.0 Ablation" after section 4) and numbered author affiliations, while tolerating one or
+    two headings the splitter misses (a gap of up to 2).
+    """
+
+    def __init__(self) -> None:
+        self.last_num = 0
+        self.last_letter = ""
+        self.body_started = False  # until Abstract/Introduction, numbered lines are front matter
+
+    def accept(self, title: str) -> bool:
+        m = HEADING_NUMBERED.match(title)
+        if not m:
+            if HEADING_NAMED.match(title) or HEADING_ROMAN.match(title):
+                self.body_started = True
+            return True  # named headings (Abstract, References, ...) and roman numerals
+        top, rest = m.group(1).split(".")[0], m.group(2)
+        if not self.body_started:
+            # Numbered author affiliations ("1 University of ...", "3 MIT") come before the body.
+            if not (top == "1" and INTRO_LIKE.search(rest)) or AFFILIATION.search(rest):
+                return False
+            self.body_started = True
+        if top.isdigit():
+            n = int(top)
+            restart = n == 1 and bool(INTRO_LIKE.search(rest))
+            ok = restart or self.last_num <= n <= self.last_num + 2
+            if ok:
+                self.last_num = n
+            return ok
+        ok = not self.last_letter or 0 <= ord(top) - ord(self.last_letter) <= 2
+        if ok:
+            self.last_letter = top
+        return ok
 
 
 def split_sections(lines: list[Line]) -> list[Section]:
     body = body_size(lines)
+    lines = merge_split_headings(lines, body)
     sections = [Section(title="Front matter")]
+    order = _Order()
     skipping_refs = False
     for ln in lines:
-        if is_heading(ln, body):
-            title = ln.text.strip()
+        if is_heading(ln, body) and order.accept(ln.text.strip()):
+            title = clean_title(ln.text.strip())
             if STOP_SECTIONS.match(title):
                 skipping_refs = True
                 continue

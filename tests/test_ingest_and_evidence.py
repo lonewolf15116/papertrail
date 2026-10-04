@@ -141,3 +141,67 @@ def test_unresolved_reports_typos_and_unknown_papers(chunks):
 
 def test_squash_ignores_hyphens_and_spacing():
     assert squash("memory-\nefficient  Training") == squash("memoryefficient training")
+
+
+# --- Heading layouts seen in the real corpus -------------------------------------------------
+
+from papertrail.ingest import Line, split_sections  # noqa: E402
+
+
+def _titles(rows: list[tuple[str, float, bool]], page: int = 1) -> list[str]:
+    body = [("Body text " * 8, 10.0, False)] * 3
+    lines = []
+    for text, size, bold in rows:
+        lines.append(Line(text, page, size, bold))
+        lines.extend(Line(t, page, s, b) for t, s, b in body)
+    return [s.title for s in split_sections(lines)]
+
+
+def test_number_and_title_on_separate_lines_are_joined():  # ICLR / MLSys (DTR, Checkmate)
+    body = [Line("Body text " * 8, 1, 10.0, False)] * 3
+    lines = [Line("1", 1, 12.0, False), Line("INTRODUCTION", 1, 12.0, False), *body]
+    lines += [Line("2.1", 1, 10.0, True), Line("Problem definition", 1, 10.0, True), *body]
+    titles = [s.title for s in split_sections(lines)]
+    assert titles == ["1 Introduction", "2.1 Problem definition"]
+
+
+def test_ieee_roman_headings_without_bold():  # vDNN
+    titles = _titles(
+        [("I. INTRODUCTION", 10.0, False), ("II. BACKGROUND AND MOTIVATION", 10.0, False)]
+    )
+    assert titles == ["I. Introduction", "II. Background and motivation"]
+
+
+def test_all_caps_subsections_without_bold():  # ICLR appendix "A.1 NETWORK DEFINITION"
+    titles = _titles([("1 INTRODUCTION", 12.0, False), ("A.1 NETWORK DEFINITION", 10.0, False)])
+    assert titles == ["1 Introduction", "A.1 Network definition"]
+
+
+def test_numbered_affiliations_are_front_matter():  # Chen et al. 2016
+    titles = _titles(
+        [
+            ("1 University of Washington", 10.0, True),
+            ("3 Massachusetts Institute of Technology", 10.0, True),
+            ("1 Introduction", 12.0, True),
+        ]
+    )
+    assert titles == ["Front matter", "1 Introduction"]
+
+
+def test_pseudocode_and_table_numbers_rejected():  # Gruslys pseudocode, 8-bit "9.0"
+    titles = _titles(
+        [
+            ("1 Introduction", 12.0, True),
+            ("2 Method", 12.0, True),
+            ("3 Analysis", 12.0, True),
+            ("1 Order of execution", 10.0, True),
+            ("9.0 Ablation Analysis", 10.0, True),
+            ("4 Results", 12.0, True),
+        ]
+    )
+    assert titles == ["1 Introduction", "2 Method", "3 Analysis", "4 Results"]
+
+
+def test_small_bold_figure_labels_are_not_headings():
+    titles = _titles([("1 Introduction", 12.0, True), ("2 Memory Ratio", 6.0, True)])
+    assert titles == ["1 Introduction"]
