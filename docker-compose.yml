@@ -1,0 +1,32 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: papertrail
+      POSTGRES_PASSWORD: papertrail
+      POSTGRES_DB: papertrail
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U papertrail"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      PAPERTRAIL_DATABASE_URL: postgresql://papertrail:papertrail@db:5432/papertrail
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

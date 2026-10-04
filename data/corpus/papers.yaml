@@ -1,0 +1,37 @@
+# Corpus manifest. Target: ~25 ML-systems papers. PDFs go in data/corpus/pdf/ (git-ignored).
+# Check each arXiv id before downloading. `group` marks papers that share terminology but make
+# different claims; those groups are where the adversarial cross-paper questions come from.
+papers:
+  - id: chen2016-sublinear
+    title: Training Deep Nets with Sublinear Memory Cost
+    arxiv: "1604.06174"
+    group: rematerialization
+  - id: checkmate2020
+    title: "Checkmate: Breaking the Memory Wall with Optimal Tensor Rematerialization"
+    arxiv: "1910.02653"
+    group: rematerialization
+  - id: dtr2021
+    title: Dynamic Tensor Rematerialization
+    arxiv: "2006.09616"
+    group: rematerialization
+  - id: capuchin2020
+    title: "Capuchin: Tensor-based GPU Memory Management for Deep Learning"
+    venue: ASPLOS 2020
+    group: rematerialization
+  - id: vdnn2016
+    title: "vDNN: Virtualized Deep Neural Networks for Scalable, Memory-Efficient Neural Network Design"
+    arxiv: "1602.08124"
+    group: offloading
+  - id: zero2020
+    title: "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models"
+    arxiv: "1910.02054"
+    group: distributed
+  - id: gpipe2019
+    title: "GPipe: Efficient Training of Giant Neural Networks using Pipeline Parallelism"
+    arxiv: "1811.06965"
+    group: distributed
+  - id: megatron2019
+    title: "Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism"
+    arxiv: "1909.08053"
+    group: distributed
+  # TODO: add ~17 more (e.g. other rematerialization/offloading, mixed precision, activation compression)
