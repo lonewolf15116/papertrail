@@ -56,3 +56,15 @@ def test_refusal_accuracy():
 @pytest.mark.parametrize(("q", "expected"), [(50, 50), (95, 95), (100, 100), (0, 1)])
 def test_percentile_nearest_rank(q, expected):
     assert percentile(list(range(1, 101)), q) == expected
+
+
+def test_evidence_recall_counts_quotes_not_chunks():
+    from papertrail.eval.metrics import evidence_recall_at_k, first_relevant_rank
+
+    # quote 1 spans two overlapping chunks (a1, a2); quote 2 lives in b1
+    evidence = [{"a1", "a2"}, {"b1"}]
+    assert evidence_recall_at_k(["a2", "x", "y"], evidence, k=3) == 0.5
+    assert evidence_recall_at_k(["a1", "a2", "b1"], evidence, k=3) == 1.0
+    assert evidence_recall_at_k(["x", "b1"], evidence, k=1) == 0.0
+    assert first_relevant_rank(["x", "y", "b1"], {"a1", "b1"}) == 3
+    assert first_relevant_rank(["x"], {"a1"}) is None

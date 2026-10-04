@@ -226,3 +226,7 @@ def test_quote_pages_and_fix_pages(tmp_path):
     )
     changes = fix_pages([q], tmp_path)
     assert q.evidence[0].page == 4 and changes == ["q: toy page 1 -> 4"]
+
+
+def test_normalize_strips_control_characters():  # NUL bytes appear in some arXiv PDFs
+    assert normalize("tensor\x00 rematerial\x07ization") == "tensor rematerial ization"

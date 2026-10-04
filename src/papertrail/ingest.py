@@ -48,6 +48,8 @@ def normalize(text: str) -> str:
     text = text.replace("ﬁ", "fi").replace("ﬂ", "fl").replace("ﬀ", "ff")
     text = text.replace("’", "'").replace("‘", "'").replace("“", '"')
     text = text.replace("”", '"').replace("–", "-").replace("—", "-")
+    # Control characters (NUL bytes appear in some PDFs) break storage and tokenisation.
+    text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", " ", text)
     text = re.sub(r"(\w)-\s*\n\s*(\w)", r"\1\2", text)
     return re.sub(r"\s+", " ", text).strip()
 

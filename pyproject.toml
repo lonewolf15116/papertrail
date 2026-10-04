@@ -34,11 +34,17 @@ dev = [
     "mypy>=1.10",
     "types-PyYAML",
     "pymupdf>=1.24",
+    "psycopg[binary]>=3.2",
+    "pgvector>=0.3",
+    "rank-bm25>=0.2",
+    "numpy>=1.26",
 ]
 
 [project.scripts]
 papertrail-eval = "papertrail.eval.run:main"
 papertrail-ingest = "papertrail.ingest:main"
+papertrail-index = "papertrail.index:main"
+papertrail-eval-retrieval = "papertrail.eval.retrieval_eval:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/papertrail"]
@@ -60,5 +66,5 @@ strict = true
 files = ["src/papertrail"]
 
 [[tool.mypy.overrides]]
-module = ["pymupdf", "pymupdf.*"]
+module = ["pymupdf", "pymupdf.*", "rank_bm25", "sentence_transformers", "pgvector.*", "psycopg"]
 ignore_missing_imports = true

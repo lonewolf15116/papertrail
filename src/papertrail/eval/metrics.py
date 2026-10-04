@@ -71,3 +71,27 @@ def percentile(values: Sequence[float], q: float) -> float:
     ordered = sorted(values)
     rank = max(1, -(-q * len(ordered) // 100))  # ceil(q/100 * n), at least 1
     return ordered[int(rank) - 1]
+
+
+def evidence_recall_at_k(
+    retrieved: Sequence[str], evidence_sets: Sequence[Iterable[str]], k: int
+) -> float:
+    """Share of evidence passages found in the top k.
+
+    Each labelled quote resolves to a set of chunk ids (overlapping chunks can both contain it);
+    a quote counts as found if ANY of its chunks is retrieved. This keeps a two-paper
+    cross-paper question at two units, however many chunks each quote spans.
+    """
+    if not evidence_sets:
+        raise ValueError("recall is undefined without evidence")
+    top = set(retrieved[:k])
+    return mean(float(bool(top.intersection(s))) for s in evidence_sets)
+
+
+def first_relevant_rank(retrieved: Sequence[str], gold: Iterable[str]) -> int | None:
+    """1-based rank of the first retrieved chunk that holds any evidence, or None."""
+    gold_set = set(gold)
+    for rank, chunk_id in enumerate(retrieved, start=1):
+        if chunk_id in gold_set:
+            return rank
+    return None
