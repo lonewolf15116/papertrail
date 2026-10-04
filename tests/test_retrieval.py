@@ -205,3 +205,16 @@ def test_pg_fulltext_and_vector_retrievers(conn):
     assert PgFullTextRetriever(conn).retrieve("the of and", 3) == []  # only stopwords
     vec = PgVectorRetriever(conn, HashEmbedder(384)).retrieve("partitions optimizer states", 2)
     assert vec[0].chunk_id == "zero:0"
+
+
+def test_bm25_header_adds_paper_identity():
+    titles = {
+        "dtr": "Dynamic Tensor Rematerialization",
+        "checkmate": "Checkmate",
+        "zero": "ZeRO Memory Optimizations",
+    }
+    plain = BM25Retriever(CHUNKS)
+    headed = BM25Retriever(CHUNKS, titles=titles)
+    assert headed.name == "bm25_header"
+    assert headed.retrieve("memory optimizations", 1)[0].chunk_id == "zero:0"
+    assert plain.retrieve("memory optimizations", 1)[0].chunk_id != "zero:0"

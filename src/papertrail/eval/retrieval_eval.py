@@ -159,6 +159,12 @@ def build_retrievers(names: Sequence[str], chunks: Sequence[Chunk]) -> list[Retr
     )
 
     settings = get_settings()
+
+    def paper_titles() -> dict[str, str]:
+        from papertrail.index import load_papers
+
+        return {p["id"]: p["title"] for p in load_papers(Path("data/corpus/papers.yaml"))}
+
     cache: dict[str, Retriever] = {}
     conn: Any = None
     embedder: Any = None
@@ -185,6 +191,8 @@ def build_retrievers(names: Sequence[str], chunks: Sequence[Chunk]) -> list[Retr
         r: Retriever
         if name == "bm25":
             r = BM25Retriever(chunks)
+        elif name == "bm25_header":
+            r = BM25Retriever(chunks, titles=paper_titles())
         elif name == "fts":
             r = PgFullTextRetriever(db())
         elif name == "vector":

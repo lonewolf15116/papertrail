@@ -82,14 +82,28 @@ def reciprocal_rank_fusion(rankings: Sequence[Sequence[str]], k: int = 60) -> li
     return sorted(scores, key=lambda cid: (-scores[cid], cid))
 
 
-class BM25Retriever:
-    name = "bm25"
+def with_header(chunk: Chunk, titles: dict[str, str]) -> str:
+    """Chunk text prefixed with its paper title and section ("contextual chunk header").
 
-    def __init__(self, chunks: Sequence[Chunk]) -> None:
+    A passage from ZeRO-Offload rarely names ZeRO-Offload in its own text; the header gives
+    keyword and dense retrievers the paper identity that the question usually mentions."""
+    title = titles.get(chunk.paper_id, chunk.paper_id)
+    return f"{title}. {chunk.section}. {chunk.text}"
+
+
+class BM25Retriever:
+    def __init__(
+        self,
+        chunks: Sequence[Chunk],
+        titles: dict[str, str] | None = None,
+        name: str | None = None,
+    ) -> None:
         from rank_bm25 import BM25Okapi
 
+        self.name = name or ("bm25_header" if titles else "bm25")
         self._chunks = list(chunks)
-        self._bm25 = BM25Okapi([tokenize(c.text) for c in self._chunks])
+        texts = [with_header(c, titles) if titles else c.text for c in self._chunks]
+        self._bm25 = BM25Okapi([tokenize(t) for t in texts])
 
     def retrieve(self, question: str, k: int) -> list[Chunk]:
         scores = self._bm25.get_scores(tokenize(question))
