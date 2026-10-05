@@ -197,16 +197,22 @@ def build_retrievers(names: Sequence[str], chunks: Sequence[Chunk]) -> list[Retr
             r = PgFullTextRetriever(db())
         elif name == "vector":
             r = PgVectorRetriever(db(), emb())
+        elif name == "vector_header":
+            r = PgVectorRetriever(db(), emb(), column="embedding_header")
         elif name == "hybrid":
             r = HybridRetriever([get("bm25"), get("vector")], candidates=50)
-        elif name == "hybrid_rerank":
+        elif name == "hybrid_header":
+            r = HybridRetriever(
+                [get("bm25_header"), get("vector_header")], candidates=50, name="hybrid_header"
+            )
+        elif name in ("hybrid_rerank", "hybrid_header_rerank"):
             from papertrail.embed import CrossEncoderReranker
 
             r = RerankRetriever(
-                get("hybrid"),
+                get(name.removesuffix("_rerank")),
                 CrossEncoderReranker(settings.reranker_model),
                 candidates=settings.rerank_candidates,
-                name="hybrid_rerank",
+                name=name,
             )
         else:
             raise ValueError(f"unknown retriever '{name}'")
@@ -222,7 +228,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="papertrail-eval-retrieval")
     parser.add_argument("--gold", type=Path, default=Path("data/gold/questions.jsonl"))
     parser.add_argument("--chunks", type=Path, default=Path("data/processed/chunks.jsonl"))
-    parser.add_argument("--retrievers", default="bm25,fts,vector,hybrid,hybrid_rerank")
+    parser.add_argument(
+        "--retrievers",
+        default="fts,bm25,bm25_header,vector,vector_header,hybrid,hybrid_header,"
+        "hybrid_rerank,hybrid_header_rerank",
+    )
     parser.add_argument("--include-drafts", action="store_true", help="score draft labels too")
     parser.add_argument("--out", type=Path, default=Path("results"))
     args = parser.parse_args(argv)

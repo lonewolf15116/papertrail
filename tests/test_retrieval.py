@@ -225,3 +225,25 @@ def test_ci_runs_the_database_tests():
     can never be skipped silently in CI."""
     if os.environ.get("GITHUB_ACTIONS") == "true":
         assert DB_URL, "PAPERTRAIL_TEST_DATABASE_URL must be set in CI"
+
+
+@needs_db
+def test_header_embeddings_are_stored_and_searchable(conn):
+    from papertrail.index import index_chunks
+    from papertrail.retrieval import PgVectorRetriever
+
+    papers = [
+        {"id": "dtr", "title": "Dynamic Tensor Rematerialization"},
+        {"id": "checkmate", "title": "Checkmate"},
+        {"id": "zero", "title": "ZeRO Memory Optimizations"},
+    ]
+    index_chunks(conn, CHUNKS, papers, HashEmbedder(384))
+    with conn.cursor() as cur:
+        cur.execute("SELECT count(embedding_header) FROM chunks")
+        assert cur.fetchone()[0] == len(CHUNKS)
+    headed = PgVectorRetriever(conn, HashEmbedder(384), column="embedding_header")
+    assert headed.name == "vector_header"
+    # "Optimizations" only appears in the ZeRO title, so only the header column can match it
+    assert headed.retrieve("ZeRO memory optimizations", 1)[0].chunk_id == "zero:0"
+    with pytest.raises(ValueError):
+        PgVectorRetriever(conn, HashEmbedder(384), column="text; DROP TABLE chunks")

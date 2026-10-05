@@ -141,23 +141,29 @@ class PgFullTextRetriever:
 
 
 class PgVectorRetriever:
-    name = "vector"
+    """Cosine nearest neighbours in pgvector. `column` picks the plain or header embeddings."""
+
+    COLUMNS = {"embedding": "vector", "embedding_header": "vector_header"}
     SQL = """
         SELECT chunk_id, paper_id, section, page, text
         FROM chunks
-        WHERE embedding IS NOT NULL
-        ORDER BY embedding <=> %s, chunk_id
+        WHERE {col} IS NOT NULL
+        ORDER BY {col} <=> %s, chunk_id
         LIMIT %s
     """
 
-    def __init__(self, conn: Any, embedder: Embedder) -> None:
+    def __init__(self, conn: Any, embedder: Embedder, column: str = "embedding") -> None:
+        if column not in self.COLUMNS:
+            raise ValueError(f"unknown embedding column '{column}'")
+        self.name = self.COLUMNS[column]
+        self._sql = self.SQL.format(col=column)  # column is from a fixed allow-list
         self._conn = conn
         self._embedder = embedder
 
     def retrieve(self, question: str, k: int) -> list[Chunk]:
         vec = self._embedder.embed_queries([question])[0]
         with self._conn.cursor() as cur:
-            cur.execute(self.SQL, (vec, k))
+            cur.execute(self._sql, (vec, k))
             return _rows_to_chunks(cur.fetchall())
 
 

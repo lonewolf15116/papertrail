@@ -18,6 +18,7 @@ from typing import Any
 import yaml
 
 from papertrail.embed import Embedder
+from papertrail.retrieval import with_header
 from papertrail.schemas import Chunk
 
 
@@ -56,6 +57,7 @@ def index_chunks(
     paper_rows = [
         (p["id"], p["title"], p.get("arxiv"), p.get("venue"), p.get("group")) for p in papers
     ]
+    titles = {p["id"]: p["title"] for p in papers}
     dim = embedding_dim(conn)
     if embedder is not None and dim is not None and embedder.dim != dim:
         raise ValueError(
@@ -72,7 +74,10 @@ def index_chunks(
         )
         for start in range(0, len(chunks), batch_size):
             batch = list(chunks[start : start + batch_size])
-            vecs = embedder.embed_passages([c.text for c in batch]) if embedder else None
+            vecs = hvecs = None
+            if embedder is not None:
+                vecs = embedder.embed_passages([c.text for c in batch])
+                hvecs = embedder.embed_passages([with_header(c, titles) for c in batch])
             rows = [
                 (
                     c.chunk_id,
@@ -81,15 +86,19 @@ def index_chunks(
                     c.page,
                     c.text,
                     vecs[i] if vecs is not None else None,
+                    hvecs[i] if hvecs is not None else None,
                 )
                 for i, c in enumerate(batch)
             ]
             cur.executemany(
-                """INSERT INTO chunks (chunk_id, paper_id, section, page, text, embedding)
-                   VALUES (%s, %s, %s, %s, %s, %s)
+                """INSERT INTO chunks
+                     (chunk_id, paper_id, section, page, text, embedding, embedding_header)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s)
                    ON CONFLICT (chunk_id) DO UPDATE SET paper_id = EXCLUDED.paper_id,
                      section = EXCLUDED.section, page = EXCLUDED.page, text = EXCLUDED.text,
-                     embedding = COALESCE(EXCLUDED.embedding, chunks.embedding)""",
+                     embedding = COALESCE(EXCLUDED.embedding, chunks.embedding),
+                     embedding_header = COALESCE(EXCLUDED.embedding_header,
+                                                 chunks.embedding_header)""",
                 rows,
             )
         cur.execute(
