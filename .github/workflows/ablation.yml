@@ -1,0 +1,83 @@
+name: Retrieval ablation
+
+# Runs the full Week 2 comparison end to end on a clean machine:
+# download the corpus and models, ingest, index into pgvector, score every retriever,
+# and publish the results to the `ablation-results` branch (one commit per run).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ablation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: papertrail
+          POSTGRES_PASSWORD: papertrail
+          POSTGRES_DB: papertrail
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U papertrail" --health-interval 5s --health-retries 10
+    env:
+      PAPERTRAIL_DATABASE_URL: postgresql://papertrail:papertrail@localhost:5432/papertrail
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install (CPU-only PyTorch)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,retrieval]"
+
+      - name: Cache corpus PDFs
+        uses: actions/cache@v4
+        with:
+          path: data/corpus/pdf
+          key: corpus-${{ hashFiles('data/corpus/papers.yaml') }}
+      - name: Download corpus
+        run: python scripts/download_corpus.py
+
+      - name: Cache models
+        uses: actions/cache@v4
+        with:
+          path: models
+          key: models-${{ hashFiles('scripts/download_models.py') }}
+      - name: Download models
+        run: python scripts/download_models.py
+
+      - name: Ingest
+        run: papertrail-ingest
+      - name: Check every gold quote resolves
+        run: papertrail-eval --chunks data/processed/chunks.jsonl
+      - name: Index into pgvector (plain + header embeddings)
+        run: |
+          psql "$PAPERTRAIL_DATABASE_URL" -f scripts/init.sql
+          papertrail-index
+
+      - name: Score retrievers (all labels, provisional)
+        run: papertrail-eval-retrieval --include-drafts --out results
+      - name: Score retrievers (verified labels only)
+        run: papertrail-eval-retrieval --out results || echo "no verified answerable questions yet"
+
+      - name: Publish results to the ablation-results branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp results/retrieval-table-*.md "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+          echo "source commit: $GITHUB_SHA" > results/SOURCE
+          echo "run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> results/SOURCE
+          cd results
+          git init -q -b ablation-results
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Retrieval ablation for ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ablation-results

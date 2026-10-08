@@ -230,3 +230,16 @@ def test_quote_pages_and_fix_pages(tmp_path):
 
 def test_normalize_strips_control_characters():  # NUL bytes appear in some arXiv PDFs
     assert normalize("tensor\x00 rematerial\x07ization") == "tensor rematerial ization"
+
+
+def test_ieee_unbolded_references_heading_drops_the_reference_list():  # vDNN
+    body = [Line("Body text " * 8, 1, 10.0, False)] * 3
+    lines = [
+        Line("I. INTRODUCTION", 1, 10.0, False),
+        *body,
+        Line("REFERENCES", 1, 10.0, False),
+        Line("[1] A. Graves. Framewise phoneme classification with LSTM.", 1, 10.0, False),
+    ]
+    secs = split_sections(lines)
+    assert [s.title for s in secs] == ["I. Introduction"]
+    assert not any("Graves" in ln.text for s in secs for ln in s.lines)

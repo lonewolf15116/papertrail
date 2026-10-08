@@ -268,7 +268,11 @@ def main(argv: list[str] | None = None) -> int:
         json.dumps(summary, indent=2), encoding="utf-8"
     )
     label = "PROVISIONAL (includes draft labels)" if args.include_drafts else "verified labels"
-    print(f"{len(questions)} answerable questions, {label}\n")
+    header = f"{len(questions)} answerable questions, {label}\n"
+    (args.out / f"retrieval-table-{tag}.md").write_text(
+        header + "\n" + markdown_table(rows), encoding="utf-8"
+    )
+    print(header)
     print(markdown_table(rows))
     return 0
 

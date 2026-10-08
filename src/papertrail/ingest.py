@@ -142,6 +142,8 @@ def is_heading(ln: Line, body: float) -> bool:
     numbered = HEADING_NUMBERED.match(text)
     if numbered and _all_caps(numbered.group(2)):  # ICLR subsections: "A.1 NETWORK DEFINITION"
         return True
+    if HEADING_NAMED.match(text) and _all_caps(text):  # IEEE: "REFERENCES", "ACKNOWLEDGMENT"
+        return True
     emphasized = ln.bold or ln.size >= body + 0.8
     if not emphasized:
         return False
