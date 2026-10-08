@@ -5,6 +5,14 @@ name: Retrieval ablation
 # and publish the results to the `ablation-results` branch (one commit per run).
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/papertrail/**"
+      - "data/gold/**"
+      - "data/corpus/papers.yaml"
+      - "scripts/**"
+      - "results/baseline.json"
 
 permissions:
   contents: write
@@ -68,6 +76,7 @@ jobs:
         run: papertrail-eval-retrieval --out results || echo "no verified answerable questions yet"
 
       - name: Publish results to the ablation-results branch
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -81,3 +90,8 @@ jobs:
           git add -A
           git commit -q -m "Retrieval ablation for ${GITHUB_SHA::7}"
           git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ablation-results
+
+      - name: Quality gate (fails if recall@5 or MRR drops below the baseline margin)
+        run: >-
+          papertrail-eval --gold data/gold/questions.jsonl
+          --results results/metrics-provisional.json --baseline results/baseline.json

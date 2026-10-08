@@ -16,7 +16,7 @@ def check_regression(
 ) -> GateResult:
     failures: list[str] = []
     for metric, margin in margins.items():
-        if metric not in baseline:
+        if metric not in baseline or metric.startswith("_"):
             continue  # new metric, nothing to regress against yet
         if metric not in current:
             failures.append(f"{metric}: missing from current run")

@@ -235,6 +235,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--include-drafts", action="store_true", help="score draft labels too")
     parser.add_argument("--out", type=Path, default=Path("results"))
+    parser.add_argument(
+        "--gate-retriever",
+        default="hybrid_header",
+        help="retriever whose recall@5/MRR are written to metrics-<labels>.json for the CI gate",
+    )
     args = parser.parse_args(argv)
 
     chunks = load_chunks(args.chunks)
@@ -267,6 +272,21 @@ def main(argv: list[str] | None = None) -> int:
     (args.out / f"retrieval-summary-{tag}.json").write_text(
         json.dumps(summary, indent=2), encoding="utf-8"
     )
+    gated = next((row for row in rows if row.retriever == args.gate_retriever), None)
+    if gated is not None:
+        (args.out / f"metrics-{tag}.json").write_text(
+            json.dumps(
+                {
+                    "recall@5": gated.recall_at_5,
+                    "mrr": gated.mrr_at_10,
+                    "_retriever": gated.retriever,
+                    "_questions": gated.n_questions,
+                    "_labels": tag,
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
     label = "PROVISIONAL (includes draft labels)" if args.include_drafts else "verified labels"
     header = f"{len(questions)} answerable questions, {label}\n"
     (args.out / f"retrieval-table-{tag}.md").write_text(

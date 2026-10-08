@@ -43,3 +43,11 @@ def test_rrf_rewards_agreement():
     fused = reciprocal_rank_fusion([["a", "b", "c"], ["b", "a", "d"]])
     assert fused[:2] == ["a", "b"]
     assert set(fused) == {"a", "b", "c", "d"}
+
+
+def test_gate_ignores_metadata_keys_in_baseline():
+    baseline = {"recall@5": 0.70, "mrr": 0.50, "_retriever": "hybrid_header", "_questions": 64}
+    current = {"recall@5": 0.69, "mrr": 0.49, "_retriever": "hybrid_header"}
+    assert check_regression(current, baseline, {"recall@5": 0.02, "mrr": 0.02}).passed
+    worse = {"recall@5": 0.60, "mrr": 0.49}
+    assert not check_regression(worse, baseline, {"recall@5": 0.02, "mrr": 0.02}).passed
