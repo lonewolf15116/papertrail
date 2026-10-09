@@ -8,7 +8,10 @@ WORKDIR /app
 
 COPY pyproject.toml README.md ./
 COPY src ./src
-RUN pip install .
+# The /ask endpoint needs retrieval (pgvector client, BM25, sentence-transformers). CPU-only
+# PyTorch keeps the image small; models are mounted at /app/models (see docker-compose.yml).
+RUN pip install torch --index-url https://download.pytorch.org/whl/cpu \
+ && pip install ".[retrieval]"
 
 RUN useradd --create-home app
 USER app
