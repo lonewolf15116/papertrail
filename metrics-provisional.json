@@ -1,0 +1,7 @@
+{
+  "recall@5": 0.703125,
+  "mrr": 0.5057849702380952,
+  "_retriever": "hybrid_header",
+  "_questions": 64,
+  "_labels": "provisional"
+}

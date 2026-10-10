@@ -1,0 +1,200 @@
+{
+  "fts": {
+    "retriever": "fts",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.2578125,
+    "mrr_at_10": 0.23175843253968254,
+    "wrong_paper_at_5": 0.21333333333333335,
+    "latency_p50_ms": 18.78204000001915,
+    "latency_p95_ms": 43.20526999993035,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.26666666666666666,
+        "mrr_at_10": 0.341005291005291
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.25510204081632654,
+        "mrr_at_10": 0.19831551668286362
+      }
+    }
+  },
+  "bm25": {
+    "retriever": "bm25",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.6484375,
+    "mrr_at_10": 0.4794394841269841,
+    "wrong_paper_at_5": 0.14666666666666667,
+    "latency_p50_ms": 2.1837420000565544,
+    "latency_p95_ms": 3.360335999900599,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.5666666666666667,
+        "mrr_at_10": 0.514074074074074
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.673469387755102,
+        "mrr_at_10": 0.468837058632977
+      }
+    }
+  },
+  "bm25_header": {
+    "retriever": "bm25_header",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.71875,
+    "mrr_at_10": 0.5008370535714286,
+    "wrong_paper_at_5": 0.14666666666666667,
+    "latency_p50_ms": 2.193719999922905,
+    "latency_p95_ms": 3.41555900001822,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.6,
+        "mrr_at_10": 0.5288888888888889
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.7551020408163265,
+        "mrr_at_10": 0.4922497570456754
+      }
+    }
+  },
+  "vector": {
+    "retriever": "vector",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.453125,
+    "mrr_at_10": 0.3107142857142857,
+    "wrong_paper_at_5": 0.12,
+    "latency_p50_ms": 29.24725100001524,
+    "latency_p95_ms": 35.088456000039514,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.4,
+        "mrr_at_10": 0.48333333333333334
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.46938775510204084,
+        "mrr_at_10": 0.2578717201166181
+      }
+    }
+  },
+  "vector_header": {
+    "retriever": "vector_header",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.5,
+    "mrr_at_10": 0.39162946428571427,
+    "wrong_paper_at_5": 0.13333333333333333,
+    "latency_p50_ms": 30.047493000097347,
+    "latency_p95_ms": 34.653250999895135,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.3333333333333333,
+        "mrr_at_10": 0.34145502645502646
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.5510204081632653,
+        "mrr_at_10": 0.40698898607061873
+      }
+    }
+  },
+  "hybrid": {
+    "retriever": "hybrid",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.609375,
+    "mrr_at_10": 0.46622643849206347,
+    "wrong_paper_at_5": 0.13333333333333333,
+    "latency_p50_ms": 34.01661600003081,
+    "latency_p95_ms": 40.58018199998514,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.6,
+        "mrr_at_10": 0.5040740740740741
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.6122448979591837,
+        "mrr_at_10": 0.45464042759961126
+      }
+    }
+  },
+  "hybrid_header": {
+    "retriever": "hybrid_header",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.703125,
+    "mrr_at_10": 0.5057849702380952,
+    "wrong_paper_at_5": 0.09333333333333334,
+    "latency_p50_ms": 34.15309100000741,
+    "latency_p95_ms": 39.01434400006565,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.5333333333333333,
+        "mrr_at_10": 0.4722222222222222
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.7551020408163265,
+        "mrr_at_10": 0.5160592808551993
+      }
+    }
+  },
+  "hybrid_rerank": {
+    "retriever": "hybrid_rerank",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.625,
+    "mrr_at_10": 0.5101066468253969,
+    "wrong_paper_at_5": 0.13333333333333333,
+    "latency_p50_ms": 1825.1492790000157,
+    "latency_p95_ms": 1857.0659189999787,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.5333333333333333,
+        "mrr_at_10": 0.5518518518518518
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.6530612244897959,
+        "mrr_at_10": 0.49732750242954327
+      }
+    }
+  },
+  "hybrid_header_rerank": {
+    "retriever": "hybrid_header_rerank",
+    "n_questions": 64,
+    "provisional": true,
+    "recall_at_5": 0.640625,
+    "mrr_at_10": 0.5123635912698413,
+    "wrong_paper_at_5": 0.13333333333333333,
+    "latency_p50_ms": 1818.2443970000577,
+    "latency_p95_ms": 1864.3704660000822,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "recall_at_5": 0.5333333333333333,
+        "mrr_at_10": 0.5444444444444444
+      },
+      "factual": {
+        "n": 49,
+        "recall_at_5": 0.673469387755102,
+        "mrr_at_10": 0.5025429219306771
+      }
+    }
+  }
+}

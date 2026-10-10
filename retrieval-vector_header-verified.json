@@ -1,0 +1,879 @@
+{
+  "retriever": "vector_header",
+  "n_questions": 57,
+  "provisional": false,
+  "recall_at_5": 0.49122807017543857,
+  "mrr_at_10": 0.39074770258980784,
+  "wrong_paper_at_5": 0.16,
+  "latency_p50_ms": 29.6367690000352,
+  "latency_p95_ms": 33.495784999900025,
+  "by_kind": {
+    "cross_paper": {
+      "n": 10,
+      "recall_at_5": 0.3,
+      "mrr_at_10": 0.433015873015873
+    },
+    "factual": {
+      "n": 47,
+      "recall_at_5": 0.5319148936170213,
+      "mrr_at_10": 0.3817544748395812
+    }
+  },
+  "questions": [
+    {
+      "id": "remat-002",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 9,
+      "wrong_paper_at_5": null,
+      "latency_ms": 25.107627000011234,
+      "top5": [
+        "dtr2021:21-c-1-fundamental-abstractions:000",
+        "dtr2021:03-2-dynamic-tensor-rematerialization:000",
+        "dtr2021:22-c-2-formal-metadata-definitions:000",
+        "dtr2021:09-5-prototype-implementation:003",
+        "dtr2021:31-e-1-integration-into-pytorch:000"
+      ]
+    },
+    {
+      "id": "remat-003",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 29.843434999975216,
+      "top5": [
+        "dtr2021:02-1-introduction:002",
+        "dtr2021:11-7-conclusion:000",
+        "dtr2021:09-5-prototype-implementation:002",
+        "dtr2021:09-5-prototype-implementation:003",
+        "chen2016-sublinear:00-front-matter:000"
+      ]
+    },
+    {
+      "id": "remat-004",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 27.328537000016695,
+      "top5": [
+        "dtr2021:03-2-dynamic-tensor-rematerialization:000",
+        "dtr2021:31-e-1-integration-into-pytorch:003",
+        "dtr2021:03-2-dynamic-tensor-rematerialization:001",
+        "dtr2021:18-a-5-proofs-of-intermediate-results:000",
+        "dtr2021:22-c-2-formal-metadata-definitions:001"
+      ]
+    },
+    {
+      "id": "remat-005",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 30.878422999990107,
+      "top5": [
+        "dtr2021:29-d-2-banishing-and-deallocations:001",
+        "dtr2021:29-d-2-banishing-and-deallocations:000",
+        "dtr2021:25-c-5-additional-runtime-optimizations:000",
+        "dtr2021:24-c-4-implementation-details:000",
+        "dtr2021:31-e-1-integration-into-pytorch:002"
+      ]
+    },
+    {
+      "id": "remat-006",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 8,
+      "wrong_paper_at_5": null,
+      "latency_ms": 26.23645099993155,
+      "top5": [
+        "dtr2021:22-c-2-formal-metadata-definitions:001",
+        "dtr2021:06-4-1-heuristics-examined:000",
+        "dtr2021:29-d-2-banishing-and-deallocations:001",
+        "dtr2021:22-c-2-formal-metadata-definitions:002",
+        "dtr2021:06-4-1-heuristics-examined:001"
+      ]
+    },
+    {
+      "id": "remat-007",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 25.27519199998096,
+      "top5": [
+        "checkmate2020:05-4-optimal-rematerialization:000",
+        "rockmate2023:03-2-related-works:003",
+        "checkmate2020:07-4-2-representing-a-schedule:000",
+        "checkmate2020:15-4-10-cost-model:000",
+        "rockmate2023:21-b-1-graph-and-objective:000"
+      ]
+    },
+    {
+      "id": "remat-008",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 7,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.44661700002871,
+      "top5": [
+        "checkmate2020:24-6-4-are-large-inputs-practical-with-rema:000",
+        "checkmate2020:26-7-conclusion:000",
+        "monet2021:17-f-on-operator-selection-for-checkmate:000",
+        "checkmate2020:22-6-2-evaluation-setup:000",
+        "actnn2021:17-6-2-memory-saving-and-computational-over:002"
+      ]
+    },
+    {
+      "id": "remat-009",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 3,
+      "wrong_paper_at_5": null,
+      "latency_ms": 26.53572200006238,
+      "top5": [
+        "monet2021:17-f-on-operator-selection-for-checkmate:000",
+        "monet2021:17-f-on-operator-selection-for-checkmate:001",
+        "checkmate2020:15-4-10-cost-model:000",
+        "checkmate2020:22-6-2-evaluation-setup:000",
+        "checkmate2020:23-6-3-what-is-the-trade-off-between-memory:000"
+      ]
+    },
+    {
+      "id": "remat-010",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 7,
+      "wrong_paper_at_5": null,
+      "latency_ms": 29.812176999939766,
+      "top5": [
+        "gruslys2016-bptt:15-4-2-numerical-comparison-with-chen-s:001",
+        "chen2016-sublinear:07-4-4-more-general-view-recursion-and-subr:000",
+        "chen2016-sublinear:06-4-3-an-o-n-memory-cost-algorithm:001",
+        "gruslys2016-bptt:15-4-2-numerical-comparison-with-chen-s:000",
+        "gruslys2016-bptt:05-2-2-trading-memory-for-computation-time:000"
+      ]
+    },
+    {
+      "id": "remat-012",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 2,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.623348000039186,
+      "top5": [
+        "coop2023:04-2-2-tensor-rematerialization-and-memory-:001",
+        "coop2023:01-abstract:000",
+        "coop2023:02-1-introduction:001",
+        "coop2023:12-4-1-evaluation-setup:000",
+        "coop2023:02-1-introduction:000"
+      ]
+    },
+    {
+      "id": "remat-013",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 6,
+      "wrong_paper_at_5": null,
+      "latency_ms": 26.312132000043675,
+      "top5": [
+        "coop2023:04-2-2-tensor-rematerialization-and-memory-:001",
+        "coop2023:02-1-introduction:001",
+        "coop2023:08-3-2-method-overview:000",
+        "coop2023:19-b-ablation-studies:001",
+        "coop2023:03-2-1-memory-allocator-in-dl-systems:001"
+      ]
+    },
+    {
+      "id": "remat-014",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 3,
+      "wrong_paper_at_5": null,
+      "latency_ms": 27.0284040000206,
+      "top5": [
+        "monet2021:02-1-introduction:001",
+        "monet2021:06-5-experiments:006",
+        "monet2021:01-abstract:000",
+        "monet2021:19-h-solver-time-and-ilp-statistics:003",
+        "monet2021:06-5-experiments:003"
+      ]
+    },
+    {
+      "id": "remat-015",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.882291999977497,
+      "top5": [
+        "gruslys2016-bptt:12-3-6-comparison-of-the-three-different-st:000",
+        "gruslys2016-bptt:14-4-1-optimality:000",
+        "gruslys2016-bptt:20-b-3-analytical-upper-bounds-for-bptt-ism:000",
+        "gruslys2016-bptt:11-3-5-analytical-upper-bound-for-bptt-hsm:000",
+        "gruslys2016-bptt:07-3-1-backpropagation-though-time-with-sel:000"
+      ]
+    },
+    {
+      "id": "remat-016",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 25.89100399995914,
+      "top5": [
+        "superneurons2018:01-abstract:000",
+        "superneurons2018:05-3-design-methodologies:000",
+        "superneurons2018:20-7-acknowledgements:000",
+        "superneurons2018:02-1-introduction:003",
+        "superneurons2018:00-front-matter:000"
+      ]
+    },
+    {
+      "id": "offload-001",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 4,
+      "wrong_paper_at_5": null,
+      "latency_ms": 30.62409699998625,
+      "top5": [
+        "vdnn2016:04-iv-methodology:002",
+        "vdnn2016:01-i-introduction:004",
+        "vdnn2016:05-v-results:001",
+        "vdnn2016:00-front-matter:000",
+        "vdnn2016:05-v-results:006"
+      ]
+    },
+    {
+      "id": "cross-006",
+      "kind": "cross_paper",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": 0.0,
+      "latency_ms": 30.816006999998535,
+      "top5": [
+        "superneurons2018:12-3-4-cost-aware-recomputation:000",
+        "superneurons2018:12-3-4-cost-aware-recomputation:001",
+        "superneurons2018:10-3-3-1-basic-utp-memory-management-memory:001",
+        "superneurons2018:01-abstract:000",
+        "pipedream2bw2021:09-4-1-activation-recomputation:000"
+      ]
+    },
+    {
+      "id": "zero-001",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 30.223446000036347,
+      "top5": [
+        "zero2020:18-5-1-pos-optimizer-state-partitioning:000",
+        "zero2020:21-5-4-implication-on-model-size:000",
+        "zero2020:02-1-extended-introduction:002",
+        "zero2020:19-5-2-pg-gradient-partitioning:001",
+        "zero2020:17-5-deep-dive-into-zero-dp:000"
+      ]
+    },
+    {
+      "id": "zero-002",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 3,
+      "wrong_paper_at_5": null,
+      "latency_ms": 25.80078500000127,
+      "top5": [
+        "zero2020:27-7-2-1-communication-volume-with-pos-g:000",
+        "zero2020:28-7-2-2-communication-volume-with-pos-g-p:000",
+        "zero2020:20-5-3-pp-parameter-partitioning:000",
+        "zero2020:25-7-communication-analysis-of-zero-dp:000",
+        "zero2020:29-8-communication-analysis-of-zero-r:000"
+      ]
+    },
+    {
+      "id": "zero-003",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 29.26724600001762,
+      "top5": [
+        "zero2020:10-3-1-model-states-optimizer-states-gradie:000",
+        "zero2020:10-3-1-model-states-optimizer-states-gradie:001",
+        "zero2020:02-1-extended-introduction:003",
+        "zero-offload2021:03-2-background-and-related-work:000",
+        "zero-offload2021:14-5-1-implementing-the-cpu-optimizer:000"
+      ]
+    },
+    {
+      "id": "zero-004",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 5,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.034245000000737,
+      "top5": [
+        "zero2020:21-5-4-implication-on-model-size:000",
+        "zero2020:30-9-step-towards-1-trillion-parameters:000",
+        "zero2020:18-5-1-pos-optimizer-state-partitioning:000",
+        "zero-infinity2021:21-8-2-model-size-and-speed:000",
+        "zero2020:20-5-3-pp-parameter-partitioning:000"
+      ]
+    },
+    {
+      "id": "zero-005",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 10,
+      "wrong_paper_at_5": null,
+      "latency_ms": 25.827715999980683,
+      "top5": [
+        "zero2020:35-10-4-democratizing-large-model-training:000",
+        "zero-offload2021:18-6-2-1-model-scale:000",
+        "zero2020:30-9-step-towards-1-trillion-parameters:000",
+        "zero-infinity2021:21-8-2-model-size-and-speed:000",
+        "zero-infinity2021:23-8-4-democratizing-large-model-training:000"
+      ]
+    },
+    {
+      "id": "zero-006",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 5,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.835163999971883,
+      "top5": [
+        "zero2020:27-7-2-1-communication-volume-with-pos-g:000",
+        "zero-offload2021:12-4-2-scaling-to-multi-gpus:000",
+        "zero2020:22-6-1-pa-partitioned-activation-checkpoint:000",
+        "zero2020:14-4-2-1-reducing-activation-memory:000",
+        "zero2020:19-5-2-pg-gradient-partitioning:000"
+      ]
+    },
+    {
+      "id": "offload-002",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.53806800003167,
+      "top5": [
+        "zero-offload2021:01-abstract:000",
+        "zero-offload2021:02-1-introduction:003",
+        "zero-offload2021:18-6-2-1-model-scale:000",
+        "zero-offload2021:10-4-zero-of-oad-schedule:000",
+        "zero-offload2021:03-2-background-and-related-work:002"
+      ]
+    },
+    {
+      "id": "offload-003",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 26.748930000053406,
+      "top5": [
+        "zero-offload2021:15-5-2-one-step-delayed-parameter-update:000",
+        "zero-offload2021:22-b-one-step-delayed-parameter-update-dpu:001",
+        "zero-offload2021:11-4-1-single-gpu-schedule:000",
+        "zero-offload2021:03-2-background-and-related-work:003",
+        "zero-offload2021:15-5-2-one-step-delayed-parameter-update:001"
+      ]
+    },
+    {
+      "id": "offload-004",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 27.106139000011353,
+      "top5": [
+        "zero-offload2021:15-5-2-one-step-delayed-parameter-update:000",
+        "zero-offload2021:11-4-1-single-gpu-schedule:000",
+        "zero-offload2021:22-b-one-step-delayed-parameter-update-dpu:001",
+        "zero-offload2021:03-2-background-and-related-work:003",
+        "zero2020:16-4-2-3-managing-fragmented-memory:000"
+      ]
+    },
+    {
+      "id": "offload-005",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 25.227191999988463,
+      "top5": [
+        "zero-infinity2021:09-5-1-design-for-unprecedented-scale:002",
+        "zero-infinity2021:09-5-1-design-for-unprecedented-scale:001",
+        "zero-infinity2021:08-5-zero-infinity-design-overview:000",
+        "zero-infinity2021:19-8-evaluation:000",
+        "zero-infinity2021:12-6-efficiency-optimizations:000"
+      ]
+    },
+    {
+      "id": "offload-006",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 3,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.526546999998573,
+      "top5": [
+        "zero-infinity2021:09-5-1-design-for-unprecedented-scale:002",
+        "zero-infinity2021:26-9-conclusion-future-implications:001",
+        "zero-infinity2021:15-6-3-infinity-offload-engine:000",
+        "zero-infinity2021:09-5-1-design-for-unprecedented-scale:001",
+        "zero2020:16-4-2-3-managing-fragmented-memory:000"
+      ]
+    },
+    {
+      "id": "offload-007",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 3,
+      "wrong_paper_at_5": null,
+      "latency_ms": 29.97208600004342,
+      "top5": [
+        "zero-infinity2021:23-8-4-democratizing-large-model-training:000",
+        "zero-infinity2021:21-8-2-model-size-and-speed:000",
+        "zero-infinity2021:01-abstract:000",
+        "zero2020:30-9-step-towards-1-trillion-parameters:000",
+        "zero-infinity2021:26-9-conclusion-future-implications:000"
+      ]
+    },
+    {
+      "id": "pipe-001",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 2,
+      "wrong_paper_at_5": null,
+      "latency_ms": 26.96489500010557,
+      "top5": [
+        "gpipe2019:10-6-design-features-and-trade-offs:002",
+        "gpipe2019:05-2-2-algorithm:000",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:003",
+        "gpipe2019:03-2-the-gpipe-library:000",
+        "gpipe2019:01-abstract:000"
+      ]
+    },
+    {
+      "id": "pipe-002",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 30.652899999950023,
+      "top5": [
+        "gpipe2019:06-2-3-performance-optimization:000",
+        "gpipe2019:10-6-design-features-and-trade-offs:002",
+        "megatron2021:05-2-2-pipeline-model-parallelism:004",
+        "pipedream2bw2021:03-2-background:001",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:003"
+      ]
+    },
+    {
+      "id": "pipe-003",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 26.34753899997122,
+      "top5": [
+        "pipedream2018:12-5-evaluation:000",
+        "pipedream2018:14-5-2-pipedream-vs-data-parallelism:000",
+        "pipedream2018:06-3-1-pipeline-parallelism:001",
+        "pipedream2018:14-5-2-pipedream-vs-data-parallelism:004",
+        "pipedream2018:05-3-parallel-training-in-pipedream:000"
+      ]
+    },
+    {
+      "id": "pipe-004",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 2,
+      "wrong_paper_at_5": null,
+      "latency_ms": 29.925398999921526,
+      "top5": [
+        "pipedream2018:09-3-4-e-ective-learning:002",
+        "pipedream2018:09-3-4-e-ective-learning:001",
+        "pipedream2bw2021:03-2-background:002",
+        "pipedream2018:09-3-4-e-ective-learning:000",
+        "pipedream2018:11-4-implementation:001"
+      ]
+    },
+    {
+      "id": "pipe-005",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.74784999998792,
+      "top5": [
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:000",
+        "pipedream2bw2021:04-3-pipedream-2bw-system-design:000",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:001",
+        "pipedream2bw2021:16-5-5-maximum-model-size-supported:000",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:002"
+      ]
+    },
+    {
+      "id": "pipe-006",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 27.953697000043576,
+      "top5": [
+        "korthikanti2022-selective:09-4-2-3-pipeline-parallelism:000",
+        "megatron2021:05-2-2-pipeline-model-parallelism:005",
+        "megatron2021:05-2-2-pipeline-model-parallelism:006",
+        "megatron2021:19-5-3-pipeline-parallelism:002",
+        "megatron2019:20-c-text-samples:005"
+      ]
+    },
+    {
+      "id": "pipe-007",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 33.495784999900025,
+      "top5": [
+        "megatron2019:10-5-experiments:000",
+        "megatron2019:12-5-1-1-model-and-data-parallelism:001",
+        "zero2020:30-9-step-towards-1-trillion-parameters:000",
+        "zero-offload2021:19-6-2-2-training-throughput:002",
+        "megatron2019:00-front-matter:000"
+      ]
+    },
+    {
+      "id": "pipe-008",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 32.78671600003236,
+      "top5": [
+        "korthikanti2022-selective:01-1-introduction:001",
+        "megatron2021:26-5-10-checkpoint-loading-and-saving:000",
+        "megatron2019:09-4-2-training-optimization-and-hyperparam:000",
+        "zero2020:22-6-1-pa-partitioned-activation-checkpoint:000",
+        "megatron2019:20-c-text-samples:005"
+      ]
+    },
+    {
+      "id": "mp-001",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 4,
+      "wrong_paper_at_5": null,
+      "latency_ms": 28.39968199998566,
+      "top5": [
+        "korthikanti2022-selective:07-4-2-1-tensor-parallelism:000",
+        "megatron2019:06-3-model-parallel-transformers:001",
+        "korthikanti2022-selective:08-4-2-2-sequence-parallelism:001",
+        "megatron2019:06-3-model-parallel-transformers:000",
+        "megatron2021:10-3-3-data-and-model-parallelism:001"
+      ]
+    },
+    {
+      "id": "mp-002",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 32.34866599996167,
+      "top5": [
+        "megatron2019:06-3-model-parallel-transformers:000",
+        "megatron2019:06-3-model-parallel-transformers:001",
+        "megatron2019:00-front-matter:000",
+        "megatron2019:18-b-1-hybrid-model-and-data-parallelism:001",
+        "korthikanti2022-selective:08-4-2-2-sequence-parallelism:001"
+      ]
+    },
+    {
+      "id": "mp-003",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 26.501747999986947,
+      "top5": [
+        "megatron2019:12-5-1-1-model-and-data-parallelism:001",
+        "megatron2019:10-5-experiments:000",
+        "megatron2019:23-d-2-strong-scaling:000",
+        "zero2020:33-10-2-speed-and-model-size:000",
+        "zero-offload2021:18-6-2-1-model-scale:001"
+      ]
+    },
+    {
+      "id": "fsdp-001",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 1,
+      "wrong_paper_at_5": null,
+      "latency_ms": 32.50952800010509,
+      "top5": [
+        "fsdp2023:09-3-2-sharding-strategies:000",
+        "fsdp2023:07-3-system-design:000",
+        "fsdp2023:06-2-3-model-sharding:000",
+        "fsdp2023:09-3-2-sharding-strategies:003",
+        "fsdp2023:08-3-1-model-initialization:001"
+      ]
+    },
+    {
+      "id": "fsdp-002",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 9,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.266189000007216,
+      "top5": [
+        "fsdp2023:23-7-discussion:000",
+        "fsdp2023:24-7-1-fsdp-interoperability:000",
+        "fsdp2023:02-1-introduction:003",
+        "fsdp2023:12-4-implementation:000",
+        "fsdp2023:07-3-system-design:001"
+      ]
+    },
+    {
+      "id": "prec-001",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 7,
+      "wrong_paper_at_5": null,
+      "latency_ms": 31.11933399998179,
+      "top5": [
+        "mixed-precision2018:05-3-1-fp32-master-copy-of-weights:000",
+        "mixed-precision2018:04-3-implementation:000",
+        "mixed-precision2018:15-5-conclusions-and-future-work:000",
+        "mixed-precision2018:08-4-results:000",
+        "mixed-precision2018:00-front-matter:000"
+      ]
+    },
+    {
+      "id": "prec-002",
+      "kind": "factual",
+      "recall_at_5": 1.0,
+      "rank": 3,
+      "wrong_paper_at_5": null,
+      "latency_ms": 29.434148000063942,
+      "top5": [
+        "zero-offload2021:07-3-3-minimizing-communication-volume:001",
+        "mixed-precision2018:08-4-results:000",
+        "mixed-precision2018:06-3-2-loss-scaling:000",
+        "zero-offload2021:15-5-2-one-step-delayed-parameter-update:001",
+        "fsdp2023:18-5-1-experiment-setup:000"
+      ]
+    },
+    {
+      "id": "prec-003",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 6,
+      "wrong_paper_at_5": null,
+      "latency_ms": 27.634177999971143,
+      "top5": [
+        "actnn2021:05-3-2-activation-compressed-training:000",
+        "actnn2021:17-6-2-memory-saving-and-computational-over:000",
+        "actnn2021:08-4-compression-strategy:000",
+        "actnn2021:01-1-introduction:000",
+        "actnn2021:13-5-1-activation-compressed-layers:000"
+      ]
+    },
+    {
+      "id": "prec-004",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 6,
+      "wrong_paper_at_5": null,
+      "latency_ms": 27.867366000009497,
+      "top5": [
+        "8bit-optim2022:01-abstract:002",
+        "8bit-optim2022:00-front-matter:000",
+        "8bit-optim2022:11-acknowledgements:000",
+        "8bit-optim2022:09-5-related-work:003",
+        "8bit-optim2022:05-2-1-block-wise-quantization:001"
+      ]
+    },
+    {
+      "id": "flash-001",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 30.97995300004186,
+      "top5": [
+        "flashattention2022:06-3-1-an-e-cient-attention-algorithm-with-:002",
+        "flashattention2022:19-b-3-flashattention-forward-pass:001",
+        "flashattention2022:06-3-1-an-e-cient-attention-algorithm-with-:001",
+        "flashattention2022:21-b-5-comparison-with-rabe-and-staats-66:001",
+        "flashattention2022:21-b-5-comparison-with-rabe-and-staats-66:000"
+      ]
+    },
+    {
+      "id": "flash-002",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": null,
+      "latency_ms": 27.500728000063646,
+      "top5": [
+        "flashattention2022:10-4-1-faster-models-with-flashattention:000",
+        "flashattention2022:26-e-2-gpt-2:000",
+        "flashattention2022:11-4-2-better-models-with-longer-sequences:000",
+        "flashattention2022:09-4-experiments:000",
+        "flashattention2022:10-4-1-faster-models-with-flashattention:001"
+      ]
+    },
+    {
+      "id": "remat-017",
+      "kind": "factual",
+      "recall_at_5": 0.0,
+      "rank": 6,
+      "wrong_paper_at_5": null,
+      "latency_ms": 28.45431399998688,
+      "top5": [
+        "korthikanti2022-selective:19-c-microbatch-level-activation-recomputat:002",
+        "korthikanti2022-selective:14-6-2-execution-time-per-layer:000",
+        "korthikanti2022-selective:14-6-2-execution-time-per-layer:001",
+        "korthikanti2022-selective:06-4-2-model-parallelism:000",
+        "korthikanti2022-selective:11-5-selective-activation-recomputation:003"
+      ]
+    },
+    {
+      "id": "cross-007",
+      "kind": "cross_paper",
+      "recall_at_5": 0.5,
+      "rank": 1,
+      "wrong_paper_at_5": 0.0,
+      "latency_ms": 29.34586300000319,
+      "top5": [
+        "fsdp2023:09-3-2-sharding-strategies:000",
+        "fsdp2023:06-2-3-model-sharding:000",
+        "zero2020:25-7-communication-analysis-of-zero-dp:000",
+        "fsdp2023:06-2-3-model-sharding:001",
+        "fsdp2023:22-6-related-work:001"
+      ]
+    },
+    {
+      "id": "cross-008",
+      "kind": "cross_paper",
+      "recall_at_5": 0.5,
+      "rank": 2,
+      "wrong_paper_at_5": 0.6,
+      "latency_ms": 29.6367690000352,
+      "top5": [
+        "pipedream2bw2021:03-2-background:002",
+        "pipedream2018:09-3-4-e-ective-learning:000",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:000",
+        "pipedream2018:11-4-implementation:002",
+        "pipedream2bw2021:03-2-background:001"
+      ]
+    },
+    {
+      "id": "cross-009",
+      "kind": "cross_paper",
+      "recall_at_5": 0.5,
+      "rank": 1,
+      "wrong_paper_at_5": 0.0,
+      "latency_ms": 34.519309999950565,
+      "top5": [
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:000",
+        "pipedream2bw2021:04-3-pipedream-2bw-system-design:000",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:001",
+        "pipedream2018:09-3-4-e-ective-learning:002",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:002"
+      ]
+    },
+    {
+      "id": "cross-010",
+      "kind": "cross_paper",
+      "recall_at_5": 0.0,
+      "rank": 9,
+      "wrong_paper_at_5": 0.0,
+      "latency_ms": 27.547957000024326,
+      "top5": [
+        "zero-infinity2021:09-5-1-design-for-unprecedented-scale:000",
+        "zero-infinity2021:15-6-3-infinity-offload-engine:000",
+        "zero-infinity2021:10-5-2-design-for-excellent-training-effici:003",
+        "zero-infinity2021:10-5-2-design-for-excellent-training-effici:001",
+        "zero-infinity2021:25-8-6-impact-of-system-features-on-perform:000"
+      ]
+    },
+    {
+      "id": "cross-011",
+      "kind": "cross_paper",
+      "recall_at_5": 0.0,
+      "rank": 7,
+      "wrong_paper_at_5": 0.0,
+      "latency_ms": 37.615387999949235,
+      "top5": [
+        "korthikanti2022-selective:01-1-introduction:001",
+        "megatron2021:26-5-10-checkpoint-loading-and-saving:000",
+        "korthikanti2022-selective:19-c-microbatch-level-activation-recomputat:001",
+        "megatron2019:20-c-text-samples:006",
+        "korthikanti2022-selective:11-5-selective-activation-recomputation:001"
+      ]
+    },
+    {
+      "id": "cross-012",
+      "kind": "cross_paper",
+      "recall_at_5": 0.0,
+      "rank": 7,
+      "wrong_paper_at_5": 0.6,
+      "latency_ms": 28.27710200006095,
+      "top5": [
+        "korthikanti2022-selective:09-4-2-3-pipeline-parallelism:000",
+        "korthikanti2022-selective:19-c-microbatch-level-activation-recomputat:000",
+        "rockmate2023:02-1-introduction:001",
+        "rockmate2023:02-1-introduction:000",
+        "rockmate2023:05-3-2-phase-1-rk-gb-graph-builder:002"
+      ]
+    },
+    {
+      "id": "cross-013",
+      "kind": "cross_paper",
+      "recall_at_5": 0.0,
+      "rank": null,
+      "wrong_paper_at_5": 0.4,
+      "latency_ms": 32.51098999999158,
+      "top5": [
+        "actnn2021:02-2-related-works:000",
+        "zero2020:11-3-2-residual-memory-consumption:000",
+        "korthikanti2022-selective:05-4-1-activations-memory-per-transformer-l:000",
+        "actnn2021:13-5-1-activation-compressed-layers:000",
+        "korthikanti2022-selective:10-4-3-total-activations-memory:000"
+      ]
+    },
+    {
+      "id": "cross-014",
+      "kind": "cross_paper",
+      "recall_at_5": 0.0,
+      "rank": 10,
+      "wrong_paper_at_5": 0.0,
+      "latency_ms": 30.479826000032517,
+      "top5": [
+        "mixed-precision2018:15-5-conclusions-and-future-work:000",
+        "mixed-precision2018:05-3-1-fp32-master-copy-of-weights:000",
+        "mixed-precision2018:08-4-results:000",
+        "mixed-precision2018:04-3-implementation:000",
+        "8bit-optim2022:16-e-fine-grained-optimizer-runtime-perform:000"
+      ]
+    },
+    {
+      "id": "cross-015",
+      "kind": "cross_paper",
+      "recall_at_5": 0.5,
+      "rank": 3,
+      "wrong_paper_at_5": 0.0,
+      "latency_ms": 29.388023000024077,
+      "top5": [
+        "korthikanti2022-selective:05-4-1-activations-memory-per-transformer-l:000",
+        "korthikanti2022-selective:05-4-1-activations-memory-per-transformer-l:001",
+        "korthikanti2022-selective:11-5-selective-activation-recomputation:001",
+        "korthikanti2022-selective:14-6-2-execution-time-per-layer:000",
+        "korthikanti2022-selective:17-a-flops-calculation:000"
+      ]
+    }
+  ]
+}

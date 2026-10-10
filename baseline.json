@@ -1,0 +1,8 @@
+{
+  "recall@5": 0.7031,
+  "mrr": 0.5058,
+  "_retriever": "hybrid_header",
+  "_questions": 64,
+  "_labels": "provisional",
+  "_source": "ablation run 37860521558 (commit cd28e24)"
+}
