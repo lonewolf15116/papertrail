@@ -21,6 +21,7 @@ Read this first when starting a new session. Last updated 2026-10-10.
 3. Add the Capuchin PDF by hand.
 4. Review `week3-grounded-answers` (check it before writing any Week 3 code), merge to main, then do the first live `papertrail-eval-answers` run (start with `--include-drafts --limit 10` to keep cost low).
 5. Decide on an updated baseline once the verified numbers are final.
+6. **No Anthropic API key available; Sunny has an OpenAI key.** The Week 3 code is Anthropic-only (`AnthropicClient` in `answer.py`, `anthropic` in `pyproject.toml`, judge in `eval/answer_eval.py`). Plan: add an `OpenAIClient` (function calling, same `Generation` interface), a provider switch in `config.py`, the `openai` dependency, `OPENAI_API_KEY` in `.env.example` and the workflow, and tests with a fake client. Use a different model for the faithfulness judge than for the answerer, and lean on the seeded human spot-check export since both are the same vendor. The key goes in a GitHub Actions secret or a local env var, never in chat or the repo. Update the README claims about the provider when done.
 
 ## Working notes
 
