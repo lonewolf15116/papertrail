@@ -1,10 +1,16 @@
 name: Answer evaluation
 
-# Manual only: every run calls the Anthropic API (answers + faithfulness judge) and costs money.
-# Needs the repository secret ANTHROPIC_API_KEY. Results are uploaded as a run artifact.
+# Manual only: every run calls the LLM API (answers + faithfulness judge) and costs money.
+# Needs the repository secret for the chosen provider (OPENAI_API_KEY or ANTHROPIC_API_KEY).
+# Results are uploaded as a run artifact.
 on:
   workflow_dispatch:
     inputs:
+      provider:
+        description: "LLM provider for the answers and the judge"
+        type: choice
+        options: [openai, anthropic]
+        default: openai
       include_drafts:
         description: "Score draft labels too (provisional numbers)"
         type: boolean
@@ -30,6 +36,8 @@ jobs:
           --health-cmd "pg_isready -U papertrail" --health-interval 5s --health-retries 10
     env:
       PAPERTRAIL_DATABASE_URL: postgresql://papertrail:papertrail@localhost:5432/papertrail
+      PAPERTRAIL_LLM_PROVIDER: ${{ inputs.provider }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +46,10 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Check the API key is configured
-        run: test -n "$ANTHROPIC_API_KEY" || { echo "Add the ANTHROPIC_API_KEY repository secret"; exit 1; }
+        run: |
+          if [ "$PAPERTRAIL_LLM_PROVIDER" = "anthropic" ]; then key="$ANTHROPIC_API_KEY"; name=ANTHROPIC_API_KEY
+          else key="$OPENAI_API_KEY"; name=OPENAI_API_KEY; fi
+          test -n "$key" || { echo "Add the $name repository secret"; exit 1; }
 
       - name: Install (CPU-only PyTorch)
         run: |

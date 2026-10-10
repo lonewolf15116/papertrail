@@ -8,6 +8,7 @@ a passage it did not use. An answer left with no verifiable citation becomes a r
 
 from __future__ import annotations
 
+import json
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol
@@ -85,7 +86,7 @@ class Generation:
 
 
 class AnswerClient(Protocol):
-    """Anything that can produce a Generation. Tests use a fake; production uses Anthropic."""
+    """Anything that can produce a Generation: Anthropic, OpenAI, or a fake in tests."""
 
     def generate(
         self, system: str, user: str, tool: dict[str, Any], max_tokens: int
@@ -129,6 +130,70 @@ class AnthropicClient:
             input_tokens=int(msg.usage.input_tokens),
             output_tokens=int(msg.usage.output_tokens),
         )
+
+
+class OpenAIClient:
+    """Forced function call against the OpenAI Chat Completions API (structured output)."""
+
+    def __init__(
+        self, model: str, api_key: str | None = None, temperature: float | None = 0.0
+    ) -> None:
+        import openai
+
+        self.model = model
+        self.temperature = temperature  # None leaves the API default (some models fix sampling)
+        self._client: Any = openai.OpenAI(api_key=api_key) if api_key else openai.OpenAI()
+
+    def generate(self, system: str, user: str, tool: dict[str, Any], max_tokens: int) -> Generation:
+        # The tool schema is written in Anthropic's shape; OpenAI wants the same JSON Schema
+        # under "function.parameters".
+        function = {
+            "name": tool["name"],
+            "description": tool["description"],
+            "parameters": tool["input_schema"],
+        }
+        options: dict[str, Any] = (
+            {} if self.temperature is None else {"temperature": self.temperature}
+        )
+        resp = self._client.chat.completions.create(
+            model=self.model,
+            max_completion_tokens=max_tokens,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            tools=[{"type": "function", "function": function}],
+            tool_choice={"type": "function", "function": {"name": tool["name"]}},
+            **options,
+        )
+        data: dict[str, Any] = {}
+        calls = getattr(resp.choices[0].message, "tool_calls", None) or []
+        for call in calls:
+            if call.function.name == tool["name"]:
+                try:
+                    parsed = json.loads(call.function.arguments)
+                except (TypeError, ValueError):
+                    parsed = None  # truncated or malformed arguments: treated as a refusal
+                if isinstance(parsed, dict):
+                    data = parsed
+                break
+        usage = resp.usage
+        return Generation(
+            data=data,
+            input_tokens=int(usage.prompt_tokens),
+            output_tokens=int(usage.completion_tokens),
+        )
+
+
+def make_client(
+    provider: str, model: str, api_key: str | None = None, temperature: float | None = 0.0
+) -> AnswerClient:
+    """Build the LLM client for a provider name ("anthropic" or "openai")."""
+    if provider == "anthropic":
+        return AnthropicClient(model, api_key, temperature)
+    if provider == "openai":
+        return OpenAIClient(model, api_key, temperature)
+    raise ValueError(f"unknown LLM provider {provider!r}")
 
 
 def render_user_message(question: str, chunks: Sequence[Chunk], titles: dict[str, str]) -> str:

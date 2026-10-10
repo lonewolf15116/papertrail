@@ -83,7 +83,8 @@ papertrail-index                     # chunks + embeddings into pgvector
 papertrail-eval-retrieval --include-drafts   # the retrieval ablation table
 curl localhost:8000/health
 
-export ANTHROPIC_API_KEY=...        # the answer step and the faithfulness judge call the API
+export OPENAI_API_KEY=... PAPERTRAIL_LLM_PROVIDER=openai   # or ANTHROPIC_API_KEY (the default provider)
+                                    # the answer step and the faithfulness judge call the API
 curl -s localhost:8000/ask -H 'content-type: application/json' \
   -d '{"question": "Which tensor does DTR evict?"}'
 papertrail-eval-answers --include-drafts --limit 10   # cheap trial run of the answer evaluation

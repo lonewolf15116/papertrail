@@ -363,11 +363,20 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     pipeline = build_default_pipeline(settings)
+    answer_spec = settings.answer_llm()
+    judge_spec = settings.judge_llm()
     judge: AnswerClient | None = None
     if not args.no_judge:
-        from papertrail.answer import AnthropicClient
+        import os
 
-        judge = AnthropicClient(settings.judge_model, temperature=None)
+        from papertrail.answer import make_client
+
+        if not os.environ.get(judge_spec.key_env):
+            print(f"{judge_spec.key_env} is not set (needed for the faithfulness judge)")
+            return 1
+        if (judge_spec.provider, judge_spec.model) == (answer_spec.provider, answer_spec.model):
+            print("WARNING: the judge is the same model as the answerer; faithfulness is biased")
+        judge = make_client(judge_spec.provider, judge_spec.model, temperature=None)
 
     results = evaluate_answers(
         pipeline,
@@ -376,12 +385,14 @@ def main(argv: list[str] | None = None) -> int:
         index,
         {c.chunk_id: c for c in chunks},
         pipeline.titles,
-        (settings.judge_input_price_per_mtok, settings.judge_output_price_per_mtok),
+        (judge_spec.input_price_per_mtok, judge_spec.output_price_per_mtok),
     )
     tag = "provisional" if args.include_drafts else "verified"
     summary = summarize(results, args.include_drafts)
-    summary["answer_model"] = settings.llm_model
-    summary["judge_model"] = None if args.no_judge else settings.judge_model
+    summary["answer_model"] = answer_spec.model
+    summary["answer_provider"] = answer_spec.provider
+    summary["judge_model"] = None if args.no_judge else judge_spec.model
+    summary["judge_provider"] = None if args.no_judge else judge_spec.provider
     summary["retriever"] = pipeline.retriever.name
 
     args.out.mkdir(parents=True, exist_ok=True)

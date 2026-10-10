@@ -2,7 +2,7 @@
 
 `Pipeline` takes its retriever and LLM client as arguments so tests and the evaluation harness
 can swap in fakes; `build_default_pipeline` wires the production pieces (Postgres/pgvector,
-the default hybrid+headers retriever, the Anthropic client).
+the default hybrid+headers retriever, the configured LLM client).
 """
 
 from __future__ import annotations
@@ -57,8 +57,9 @@ class Pipeline:
                 TOOL_SCHEMA,
                 s.max_answer_tokens,
             )
+            spec = s.answer_llm()
             resp = build_response(
-                chunks, generation, (s.llm_input_price_per_mtok, s.llm_output_price_per_mtok)
+                chunks, generation, (spec.input_price_per_mtok, spec.output_price_per_mtok)
             )
 
         resp.retrieval_ms = retrieval_ms
@@ -97,19 +98,20 @@ def load_index(conn: Any) -> tuple[list[Chunk], dict[str, str]]:
 
 
 def build_default_pipeline(settings: Settings | None = None) -> Pipeline:
-    """Production wiring. Raises if the database is empty or no Anthropic key is configured."""
+    """Production wiring. Raises if the database is empty or the LLM provider's key is missing."""
     import os
 
-    from papertrail.answer import AnthropicClient
+    from papertrail.answer import make_client
     from papertrail.eval.retrieval_eval import build_retrievers
     from papertrail.index import connect
 
     s = settings or get_settings()
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise RuntimeError("ANTHROPIC_API_KEY is not set")
+    spec = s.answer_llm()
+    if not os.environ.get(spec.key_env):
+        raise RuntimeError(f"{spec.key_env} is not set")
     chunks, titles = load_index(connect(s.database_url))
     if not chunks:
         raise RuntimeError("the chunks table is empty: run papertrail-ingest and papertrail-index")
     (retriever,) = build_retrievers([s.retriever], chunks, titles=titles)
     retriever.retrieve("warm up", 1)  # load models before the first user request
-    return Pipeline(retriever, AnthropicClient(s.llm_model), titles, s)
+    return Pipeline(retriever, make_client(spec.provider, spec.model), titles, s)
