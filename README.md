@@ -12,7 +12,7 @@ hand-labelled question set, and CI fails the build if quality regresses.
 |---|---|---|
 | 1. Corpus + gold set | 24 papers, 60–100 labelled questions incl. unanswerable and cross-paper | 23 papers ingested (1,074 chunks); 74 questions, 12 verified so far |
 | 2. Retrieval ablations | BM25 → vectors → hybrid (RRF) → cross-encoder rerank; recall@5, MRR | done; runs in CI with a regression gate |
-| 3. Grounded answers | FastAPI `/ask` with paper/page/section citations and a refusal path | built and unit-tested; first scored run pending ([`answers-eval.yml`](.github/workflows/answers-eval.yml), manual) |
+| 3. Grounded answers | FastAPI `/ask` with paper/page/section citations and a refusal path | built, tested, scored once on all 74 questions (provisional labels); known weaknesses below |
 | 4. Ship | Docker Compose, CI quality gate, deployment, p50/p95 latency and cost | CI, Docker and the retrieval gate in place |
 | Later | Agent tools: `search_papers`, `fetch_section`, `compare_papers` | — |
 
@@ -67,6 +67,39 @@ lexical retrieval; paraphrased questions from real users would likely narrow the
 
 The gate: every push that touches retrieval code, the corpus or the questions reruns the ablation and fails if the
 default retriever's recall@5 or MRR drops more than 0.02 below [`results/baseline.json`](results/baseline.json).
+
+## Results: grounded answers
+
+First full run of [`answers-eval.yml`](.github/workflows/answers-eval.yml): all 74 questions, **provisional** (draft
+labels included), `gpt-4.1-mini` answers, `gpt-4.1` faithfulness judge, `hybrid_header` retrieval, 0 errors.
+Raw output is on the [`answers-results`](../../tree/answers-results) branch.
+
+| Metric | Value |
+|---|---|
+| Refusal accuracy | 0.878 |
+| False-answer rate (unanswerable questions answered) | **0.400** (4 of 10) |
+| False-refusal rate (answerable questions refused) | 0.078 |
+| Citation precision / hit rate | 0.489 / 0.644 |
+| Wrong-paper citation rate | 0.051 |
+| Faithfulness (LLM judge) | 0.932 |
+| Latency p50 / p95 | 1.5 s / 2.9 s |
+| Cost per question | about $0.001 (answer) |
+
+What the numbers say, and what they do not:
+
+- **The worst failure is answering near-miss questions.** All four unanswerable questions it answered swap one
+  detail for something the corpus does cover: H100 became V100 (ZeRO-Infinity), TPU v4 became AWS GPUs
+  (PipeDream-2BW), GPT-3 became ResNet-50 (ActNN), transformers became VGG-16 (vDNN). The citations were real,
+  so verification did not catch it; the judge scored those answers 0.5 to 0.67. The prompt needs an explicit
+  rule to refuse when the question's specific model, hardware or metric is absent from the sources.
+- **Faithfulness is high (0.93) but the judge is the same vendor as the answerer.** Treat it as an upper bound
+  until the spot-check sample is read by a person.
+- **Citation precision is low (0.49), most of all on cross-paper questions (0.27).** Part of this is the metric:
+  it counts a citation as correct only if it lands on a labelled evidence chunk, so a right answer cited to a
+  neighbouring chunk scores zero. How much, and how much is real, is not yet measured.
+- **Strict quote checking costs answers.** 34 citations were dropped, and 5 of 64 answerable questions were
+  refused only because every quote failed verification, mostly on math-heavy passages.
+- Single run, provisional labels, one model: no confidence intervals yet.
 
 ## Quick start
 
