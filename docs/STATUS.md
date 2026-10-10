@@ -26,7 +26,7 @@ Read this first when starting a new session. Last updated 2026-10-10.
 **Full run (run 5, all 74 questions, provisional, `gpt-4.1-mini` + `gpt-4.1` judge, commit 218df01) is read and in the README.** Headline: false-answer rate 0.40 (4 of 10 unanswerable questions answered by swapping a detail: unans-005 H100 to V100, -006 TPU v4 to GPUs, -009 GPT-3 to ResNet-50, -010 transformers to VGG-16); false refusals 0.078 (5, all "every citation failed verification": remat-010, cross-006, pipe-006, pipe-008, cross-015); citation precision 0.489 (cross-paper 0.27); wrong-paper citations 3 (pipe-004, cross-008, cross-014); faithfulness 0.932 (same-vendor judge). 34 citations dropped in total.
 
 **Next, in order:**
-1. Prompt rule: refuse when the question names a model, hardware or metric the sources do not contain (fixes the 4 false answers). Add the 4 as regression tests and re-run.
+1. Prompt rule 4a (refuse when the question names a model, hardware or metric the sources do not contain) is added in `answer.py` and pushed, but NOT yet verified: it has never been run against the model. Re-run the full evaluation and check unans-005/006/009/010 in `answers-results`; also check false refusals did not rise (the rule could make the model over-refuse). A unit test only guards that the rule text is present.
 2. Quote verification on math text: look at how `squash` treats LaTeX or PDF-extracted math before loosening it (the 5 false refusals).
 3. Citation precision: measure how much of the 0.49 is the metric (cited a neighbouring chunk of the same passage) versus real misses; consider scoring at page or section level as well.
 4. Read the spot-check sample by hand; a second judge from another vendor would be better than a same-vendor one.

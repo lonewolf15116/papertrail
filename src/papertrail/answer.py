@@ -34,6 +34,11 @@ one paper over to another. If the question names a paper or system, use only tha
 say in one sentence what is missing. This includes the case where the sources are about a \
 different paper or system than the one asked about. If the sources support only part of the \
 question, answer only that part and say what they do not cover. Never guess.
+4a. Check the specifics of the question against the sources before answering. If the question \
+names a particular model, dataset, hardware, metric or setting (for example a GPU type, a model \
+size, an accelerator, a benchmark) and the sources do not report that exact thing, refuse. Do not \
+answer with a similar thing from the sources instead: a result for a different GPU, model, \
+dataset or metric does not answer the question, even if it is closely related.
 5. Be concise: one to four sentences, in your own words, no preamble.
 Respond only by calling the submit_answer tool."""
 

@@ -155,3 +155,12 @@ def test_openai_client_flags_truncation():
     reply.choices[0].finish_reason = "length"
     client, _ = _openai_with(reply)
     assert client.generate("s", "u", TOOL_SCHEMA, 10).truncated is True
+
+
+def test_prompt_tells_the_model_to_refuse_near_miss_questions():
+    # Guards against the rule being edited out; it does not prove the model obeys it. Behaviour
+    # is measured by the unanswerable questions in the answer evaluation (unans-005/006/009/010
+    # were answered by swapping H100->V100, TPU->GPU, GPT-3->ResNet-50, transformers->VGG-16).
+    from papertrail.answer import SYSTEM_PROMPT
+
+    assert "exact thing" in SYSTEM_PROMPT and "similar thing" in SYSTEM_PROMPT
