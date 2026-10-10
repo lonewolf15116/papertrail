@@ -70,48 +70,55 @@ default retriever's recall@5 or MRR drops more than 0.02 below [`results/baselin
 
 ## Results: grounded answers
 
-Three full runs of [`answers-eval.yml`](.github/workflows/answers-eval.yml), 74 questions each, **provisional**
+Four full runs of [`answers-eval.yml`](.github/workflows/answers-eval.yml), 74 questions each, **provisional**
 (draft labels included), `gpt-4.1-mini` answers, `gpt-4.1` faithfulness judge, `hybrid_header` retrieval, 0
 errors. Run 2 adds a prompt rule (refuse when the question names a model, hardware or metric the sources do not
-report); run 3 adds a math-tolerant citation check and records the quotes it rejects. Raw output is on the
+report); run 3 a math-tolerant citation check; run 4 an ellipsis-aware one. Raw output is on the
 [`answers-results`](../../tree/answers-results) branch.
 
-| Metric | Run 1 | Run 2 (+ refusal rule) | Run 3 (+ math check) |
-|---|---|---|---|
-| Refusal accuracy | 0.878 | 0.919 | 0.919 |
-| False-answer rate (unanswerable questions answered) | 0.400 (4 of 10) | **0.200** (2) | **0.200** (2) |
-| False-refusal rate (answerable questions refused) | 0.078 (5) | 0.062 (4) | 0.062 (4) |
-| Citation precision (exact chunk) | 0.489 | 0.474 | 0.514 |
-| Citation precision (labelled page) | n/a | n/a | 0.519 |
-| Citation hit rate | 0.644 | 0.617 | 0.683 |
-| Wrong-paper citation rate | 0.051 | 0.067 | 0.100 |
-| Faithfulness (LLM judge) | 0.932 | 0.903 | 0.943 |
-| Citations dropped by verification | 34 | 34 | 25 |
-| Latency p50 / p95 | 1.5 s / 2.9 s | 1.5 s / 2.8 s | 1.5 s / 2.7 s |
-| Cost per question | about $0.001 | about $0.001 | about $0.001 |
+| Metric | Run 1 | Run 2 (+ refusal rule) | Run 3 (+ math check) | Run 4 (+ ellipsis check) |
+|---|---|---|---|---|
+| Refusal accuracy | 0.878 | 0.919 | 0.919 | 0.932 |
+| False-answer rate (unanswerable answered) | 0.400 (4 of 10) | 0.200 (2) | 0.200 (2) | 0.200 (2) |
+| False-refusal rate (answerable refused) | 0.078 (5) | 0.062 (4) | 0.062 (4) | 0.047 (3) |
+| Citation precision (exact chunk) | 0.489 | 0.474 | 0.514 | 0.471 |
+| Citation precision (labelled page) | n/a | n/a | 0.519 | 0.486 |
+| Citation hit rate | 0.644 | 0.617 | 0.683 | 0.656 |
+| Wrong-paper citation rate | 0.051 | 0.067 | 0.100 | 0.082 |
+| Faithfulness (LLM judge) | 0.932 | 0.903 | 0.943 | 0.953 |
+| Citations dropped by verification | 34 | 34 | 25 | 18 |
+| Latency p50 / p95 | 1.5 s / 2.9 s | 1.5 s / 2.8 s | 1.5 s / 2.7 s | 1.6 s / 2.7 s |
+| Cost per question | about $0.001 | about $0.001 | about $0.001 | about $0.001 |
 
 What the numbers say, and what they do not:
 
+- **Run-to-run noise is now visible, and it is as large as most of the changes.** The model is not deterministic
+  even at temperature 0. Across the four runs, citation precision ranges 0.47 to 0.51, faithfulness 0.90 to
+  0.95, wrong-paper rate 0.05 to 0.10. Only two moves are clearly real: the false-answer rate halving from the
+  refusal rule (0.40 to 0.20, then stable for three runs), and citations dropped falling 34 to 18.
 - **Near-miss questions were the worst failure; the rule halved it.** In run 1 all four unanswerable questions it
   answered swapped one detail for something the corpus does cover: H100 became V100 (ZeRO-Infinity), TPU v4
   became AWS GPUs (PipeDream-2BW), GPT-3 became ResNet-50 (ActNN), transformers became VGG-16 (vDNN). The
-  citations were real, so quote checking cannot catch this. With the rule, PipeDream-2BW and ActNN are refused;
-  ZeRO-Infinity on H100 and vDNN on transformers are still answered.
-- **Small samples: treat differences as noise unless they are large.** Ten unanswerable questions means one
-  question is 10 points, and the model is not deterministic even at temperature 0: answerable questions flip in
-  both directions between runs. The wrong-paper rate rising from 0.051 to 0.100 (3 to 6 questions) is the
-  figure to watch; it is not yet explained.
-- **Faithfulness is high but the judge is the same vendor as the answerer.** Treat 0.90 to 0.94 as an upper
+  citations were real, so quote checking cannot catch this. PipeDream-2BW and ActNN are now refused;
+  ZeRO-Infinity on H100 and vDNN on transformers are still answered. Ten questions is a small sample: one
+  question is 10 points.
+- **Faithfulness is high but the judge is the same vendor as the answerer.** Treat 0.90 to 0.95 as an upper
   bound until the spot-check sample is read by a person.
-- **Citation precision is low (0.51; 0.32 on cross-paper) and the page-level score is no better (0.52).** So the
-  gap is not mostly "cited a neighbouring chunk on the right page". Answers average 1.8 citations, and
-  precision counts every cited chunk that is not a labelled one, so valid extra citations are penalised; with
-  faithfulness at 0.94 the cited passages mostly do support the answers. Whether the labels are too narrow has
-  not been checked.
-- **Why quotes get rejected.** Run 3 recorded 25 rejected quotes. 13 of them (52%, in 11 questions) join two
-  passages with an ellipsis ("A ... B"), which the verbatim check did not allow; the check now verifies each
-  fragment separately and in order. The math fix removed the two worst cases from run 1 (remat-003 and
-  remat-010, 3 rejected quotes each). The other 12 are unexplained and need the chunk text to diagnose.
+- **A verified quote does not mean the answer is supported.** Quote checking proves the quote is in the cited
+  chunk, not that the answer's claims came from it. In run 4, pipe-006 and zero-002 were correct answers
+  (they match the paper) scored 0.0 and 0.25 for faithfulness, because the one citation that survived points to
+  a chunk that lacks most of the claims, while the quotes that did hold the claims were dropped. Re-attributing
+  a quote to the retrieved chunk that actually contains it is the next experiment.
+- **Citation precision is low (0.47 to 0.51; 0.37 on cross-paper) and the page-level score is no better.** So
+  the gap is not mostly "cited a neighbouring chunk on the right page". Answers average 1.8 citations and
+  every non-labelled cited chunk counts against precision, while faithfulness is high. Whether the labels are
+  too narrow has not been checked.
+- **Wrong-paper citations are mostly a sibling paper cited alongside the right one** (PipeDream with PipeDream-2BW,
+  Megatron 2019 with 2021, Chen 2016 with Gruslys 2016: 3 of 5). The other 2 are real misses on cross-paper
+  questions (cross-008 and cross-014 miss one of the two gold papers).
+- **Why quotes were rejected.** Of 25 recorded in run 3, 13 joined two passages with an ellipsis; run 4's
+  per-fragment check cut those to 4 (the remaining two quotes splice passages that sit in different chunks,
+  which the check rightly refuses). The math fix cleared the two worst cases in run 1 (remat-003, remat-010).
 
 ## Quick start
 
