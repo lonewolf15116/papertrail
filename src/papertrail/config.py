@@ -57,7 +57,7 @@ class Settings(BaseSettings):
     llm_output_price_per_mtok: float | None = None
     judge_input_price_per_mtok: float | None = None
     judge_output_price_per_mtok: float | None = None
-    max_answer_tokens: int = 600
+    max_answer_tokens: int = 1500
     retriever: str = "hybrid_header"
     top_k: int = 5
     rerank_candidates: int = 20

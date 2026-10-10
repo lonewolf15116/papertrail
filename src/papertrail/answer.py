@@ -83,6 +83,7 @@ class Generation:
     data: dict[str, Any]
     input_tokens: int
     output_tokens: int
+    truncated: bool = False  # the reply hit the max-token limit, so its arguments may be cut off
 
 
 class AnswerClient(Protocol):
@@ -129,6 +130,7 @@ class AnthropicClient:
             data=data,
             input_tokens=int(msg.usage.input_tokens),
             output_tokens=int(msg.usage.output_tokens),
+            truncated=getattr(msg, "stop_reason", None) == "max_tokens",
         )
 
 
@@ -182,6 +184,7 @@ class OpenAIClient:
             data=data,
             input_tokens=int(usage.prompt_tokens),
             output_tokens=int(usage.completion_tokens),
+            truncated=getattr(resp.choices[0], "finish_reason", None) == "length",
         )
 
 
@@ -286,6 +289,8 @@ def build_response(
             "The model drafted an answer but none of its citations could be verified "
             "against the retrieved passages, so it was withheld."
         )
+    elif generation.truncated and not data:
+        reason = "The model's reply was cut off at the token limit, so no answer was produced."
     elif not isinstance(reason, str) or not reason.strip():
         reason = "The retrieved passages do not support an answer."
     return AskResponse(

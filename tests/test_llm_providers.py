@@ -139,3 +139,19 @@ def test_model_and_price_overrides_beat_provider_defaults():
 def test_unknown_provider_is_rejected_with_the_choices():
     with pytest.raises(ValueError, match="anthropic"):
         Settings(_env_file=None, llm_provider="nope").answer_llm()
+
+
+def test_a_reply_cut_off_at_the_token_limit_is_reported_as_such_not_as_unsupported():
+    from papertrail.answer import build_response
+    from papertrail.schemas import AnswerStatus
+
+    resp = build_response([], Generation({}, 100, 600, truncated=True), (0.0, 0.0))
+    assert resp.status is AnswerStatus.REFUSED
+    assert "token limit" in (resp.refusal_reason or "")
+
+
+def test_openai_client_flags_truncation():
+    reply = _Reply(None)
+    reply.choices[0].finish_reason = "length"
+    client, _ = _openai_with(reply)
+    assert client.generate("s", "u", TOOL_SCHEMA, 10).truncated is True
