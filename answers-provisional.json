@@ -1,0 +1,2949 @@
+{
+  "summary": {
+    "provisional": true,
+    "n_questions": 74,
+    "n_errors": 0,
+    "n_answerable": 64,
+    "n_unanswerable": 10,
+    "refusal_accuracy": 0.9324324324324325,
+    "false_refusal_rate": 0.046875,
+    "false_answer_rate": 0.2,
+    "citation_precision": 0.4713114754098361,
+    "citation_precision_page": 0.48633879781420764,
+    "citation_hit_rate": 0.6557377049180327,
+    "wrong_paper_citation_rate": 0.08196721311475409,
+    "faithfulness": 0.9526455026455026,
+    "citations_dropped_total": 18,
+    "by_kind": {
+      "cross_paper": {
+        "n": 15,
+        "refused": 0,
+        "citation_precision": 0.36666666666666664,
+        "wrong_paper_citation_rate": 0.13333333333333333,
+        "faithfulness": 0.9833333333333333
+      },
+      "factual": {
+        "n": 49,
+        "refused": 3,
+        "citation_precision": 0.5054347826086957,
+        "wrong_paper_citation_rate": 0.06521739130434782,
+        "faithfulness": 0.9565217391304348
+      },
+      "unanswerable": {
+        "n": 10,
+        "refused": 8,
+        "citation_precision": null,
+        "wrong_paper_citation_rate": null,
+        "faithfulness": 0.6333333333333333
+      }
+    },
+    "latency_p50_ms": 1553.1208259999403,
+    "latency_p95_ms": 2690.8887520000917,
+    "mean_input_tokens": 2371.364864864865,
+    "mean_output_tokens": 192.71621621621622,
+    "mean_cost_usd": 0.001256891891891892,
+    "total_judge_cost_usd": 0.216772,
+    "answer_model": "gpt-4.1-mini",
+    "answer_provider": "openai",
+    "judge_model": "gpt-4.1",
+    "judge_provider": "openai",
+    "retriever": "hybrid_header"
+  },
+  "questions": [
+    {
+      "id": "remat-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "DTR's h_DTR heuristic chooses to evict the tensor that is stalest (least likely to be needed soon), largest (saves the most space), and cheapest (requires the least additional rematerialization if needed again).",
+      "cited_chunk_ids": [
+        "dtr2021:03-2-dynamic-tensor-rematerialization:001"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "DTR's h_DTR heuristic chooses to evict the tensor that is stalest (least likely to be needed soon), largest (saves the most space), and cheapest (requires the least additional rematerialization if needed again).",
+          "supported": true,
+          "reason": "The passage states that DTR proposes a rematerialization-specific heuristic that balances staleness, memory, and cost, evicting the tensor that is stalest, largest, and cheapest."
+        }
+      ],
+      "latency_ms": 2745.9400580000306,
+      "input_tokens": 2419,
+      "output_tokens": 129,
+      "cost_usd": 0.001174,
+      "judge_cost_usd": 0.00215,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "DTR tracks the following metadata for each tensor: the parent operation that computes it, the external reference count (refs), whether the tensor is resident in memory (defined(t)), if it is an alias tensor, and the size (0 if alias, otherwise the size of its storage). Additionally, for eviction heuristics, DTR tracks staleness (time since last access), memory size, and cost (time to compute from parent tensors).",
+      "cited_chunk_ids": [
+        "dtr2021:21-c-1-fundamental-abstractions:000",
+        "dtr2021:03-2-dynamic-tensor-rematerialization:001",
+        "dtr2021:21-c-1-fundamental-abstractions:001"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.3333333333333333,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "DTR tracks the parent operation that computes each tensor.",
+          "supported": true,
+          "reason": "Passage [1] and [3] mention that each tensor has an associated parent operation."
+        },
+        {
+          "claim": "DTR tracks the external reference count (refs) for each tensor.",
+          "supported": true,
+          "reason": "Passages [1] and [3] state that each tensor has an external reference count."
+        },
+        {
+          "claim": "DTR tracks whether the tensor is resident in memory (defined(t)).",
+          "supported": true,
+          "reason": "Passage [3] explains defined(t) and relates it to residency of tensor storage."
+        },
+        {
+          "claim": "DTR tracks if a tensor is an alias.",
+          "supported": true,
+          "reason": "Passages [1] and [3] describe how DTR determines if a tensor is an alias."
+        },
+        {
+          "claim": "DTR tracks the size of each tensor (0 if alias, otherwise the size of its storage).",
+          "supported": true,
+          "reason": "Passage [3] specifically defines size(t) in this manner."
+        },
+        {
+          "claim": "For eviction heuristics, DTR tracks staleness (time since last access), memory size, and cost (time to compute from parent tensors).",
+          "supported": true,
+          "reason": "Passage [2] states that the runtime system tracks staleness, memory, and cost for eviction heuristics."
+        }
+      ],
+      "latency_ms": 2588.4995619999813,
+      "input_tokens": 2567,
+      "output_tokens": 350,
+      "cost_usd": 0.0015868,
+      "judge_cost_usd": 0.005198,
+      "dropped_citations": 2,
+      "dropped_quotes": [
+        "t is an alias iff t\u0338 = root(storage(t)), meaning that t is a view of a storage created by a different parent operator.",
+        "For convenience, we define size(t) to be 0 if t is an alias and size(storage(t)) otherwise."
+      ],
+      "error": null
+    },
+    {
+      "id": "remat-003",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "DTR requires a memory budget of \\(B = \\Omega(\\sqrt{N})\\) to train an N-layer linear feedforward network, and it performs only \\(O(N)\\) tensor operations. Specifically, the forward pass requires exactly N tensor operations with no rematerialization, and the backward pass overhead is kept to a constant factor, resulting in an overall \\(O(N)\\) operations. This matches the optimal static checkpointing bounds up to constant factors.",
+      "cited_chunk_ids": [
+        "dtr2021:02-1-introduction:002",
+        "dtr2021:04-3-formal-bounds:000"
+      ],
+      "citation_precision": 0.5,
+      "citation_precision_page": 0.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "DTR requires a memory budget of B = \u2126(\u221aN) to train an N-layer linear feedforward network, and it performs only O(N) tensor operations.",
+          "supported": true,
+          "reason": "Passage [2] states this directly for a linear feedforward network with the specified memory budget."
+        },
+        {
+          "claim": "The forward pass requires exactly N tensor operations with no rematerialization.",
+          "supported": true,
+          "reason": "Passage [2] explicitly states that the forward pass does exactly N tensor operations and does not require rematerialization."
+        },
+        {
+          "claim": "The backward pass overhead is kept to a constant factor, resulting in an overall O(N) operations.",
+          "supported": true,
+          "reason": "Passage [2] states the total (forward plus backward) operations are O(N), meaning the backward pass remains in the same asymptotic bound as the forward."
+        },
+        {
+          "claim": "This matches the optimal static checkpointing bounds up to constant factors.",
+          "supported": true,
+          "reason": "Passage [2] and [1] both state that the results are within a constant factor of the optimal and of the static checkpointing technique."
+        }
+      ],
+      "latency_ms": 1991.7851139999811,
+      "input_tokens": 2362,
+      "output_tokens": 278,
+      "cost_usd": 0.0013896000000000002,
+      "judge_cost_usd": 0.004044,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "in a feed-forward network, we only ever need \\(B = 2\\) units of memory to compute the forward pass without any rematerializations (furthermore, this is the minimum required memory). For this reason, t"
+      ],
+      "error": null
+    },
+    {
+      "id": "remat-004",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "DTR brings back a tensor that has been evicted by rematerializing it through replaying the parent operation that originally produced the tensor. This rematerialization can be recursive if the arguments to the evicted tensor's parent operation have also been evicted, requiring them to be rematerialized first. This process may trigger more evictions if memory is exhausted during rematerialization.",
+      "cited_chunk_ids": [
+        "dtr2021:03-2-dynamic-tensor-rematerialization:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "DTR brings back a tensor that has been evicted by rematerializing it through replaying the parent operation that originally produced the tensor.",
+          "supported": true,
+          "reason": "The passage states that DTR rematerializes an evicted tensor by replaying the parent operation that originally produced it."
+        },
+        {
+          "claim": "This rematerialization can be recursive if the arguments to the evicted tensor's parent operation have also been evicted, requiring them to be rematerialized first.",
+          "supported": true,
+          "reason": "The passage explicitly says rematerialization can be recursive: if the arguments to the parent operation have been evicted, they must be rematerialized first."
+        },
+        {
+          "claim": "This process may trigger more evictions if memory is exhausted during rematerialization.",
+          "supported": true,
+          "reason": "The passage states that rematerialization may trigger more evictions if memory is exhausted during the process."
+        }
+      ],
+      "latency_ms": 1598.9033359999212,
+      "input_tokens": 2444,
+      "output_tokens": 177,
+      "cost_usd": 0.0012607999999999999,
+      "judge_cost_usd": 0.00289,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-005",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "In DTR, banishing is the permanent removal of a storage S when it has no evicted dependents, which involves evicting S and removing it entirely from the dependency graph, effectively pinning its dependents as non-rematerializable constants. The cost of banishing is that it can pin potentially exploding amounts of memory, preventing future evictions of children tensors, but it can free constants that cannot be evicted otherwise. Banishing can lower runtime overhead but supports less aggressive memory budgets compared to eager eviction.",
+      "cited_chunk_ids": [
+        "dtr2021:25-c-5-additional-runtime-optimizations:000",
+        "dtr2021:24-c-4-implementation-details:000",
+        "dtr2021:29-d-2-banishing-and-deallocations:000",
+        "dtr2021:03-2-dynamic-tensor-rematerialization:003"
+      ],
+      "citation_precision": 0.25,
+      "citation_precision_page": 0.25,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "In DTR, banishing is the permanent removal of a storage S when it has no evicted dependents.",
+          "supported": true,
+          "reason": "Passage [2] describes banishing as permanent removal and says it can only be done for S when its set of evicted dependents is empty."
+        },
+        {
+          "claim": "Banishing involves evicting S and removing it entirely from the dependency graph, effectively pinning its dependents as non-rematerializable constants.",
+          "supported": true,
+          "reason": "Passage [2] explicitly states banishing involves evicting S, removing S from the dependency graph, and pinning dependents as non-rematerializable constants."
+        },
+        {
+          "claim": "The cost of banishing is that it can pin potentially exploding amounts of memory, preventing future evictions of children tensors, but it can free constants that cannot be evicted otherwise.",
+          "supported": true,
+          "reason": "Passages [1] and [4] mention that banishing can pin large amounts of memory, prevents evictions of children, and is the only way to free constants."
+        },
+        {
+          "claim": "Banishing can lower runtime overhead but supports less aggressive memory budgets compared to eager eviction.",
+          "supported": true,
+          "reason": "Passages [1] and [3] indicate banishing can have lower runtime overhead and [3] shows it supports less aggressive memory budgets than eager eviction."
+        }
+      ],
+      "latency_ms": 3456.048504000023,
+      "input_tokens": 2399,
+      "output_tokens": 565,
+      "cost_usd": 0.0018636,
+      "judge_cost_usd": 0.006362,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-006",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "DTR uses the union-find approximation of the evicted neighborhood to reduce the computational complexity of tracking the exact evicted neighborhood, which is expensive due to the directed and changing nature of the dependency graph. The union-find data structure allows efficient merging of evicted components in near-constant time, and the approximation reduces the worst-case time complexity of querying compute costs over the neighborhood to be linear in the number of adjacent storages instead of all ancestors and descendants. This approximation also enables up to two orders of magnitude fewer metadata accesses per batch while performing nearly as well as the exact heuristic.",
+      "cited_chunk_ids": [
+        "dtr2021:06-4-1-heuristics-examined:000",
+        "dtr2021:22-c-2-formal-metadata-definitions:002",
+        "dtr2021:03-2-dynamic-tensor-rematerialization:002"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.3333333333333333,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "DTR uses the union-find approximation of the evicted neighborhood to reduce the computational complexity of tracking the exact evicted neighborhood, which is expensive due to the directed and changing nature of the dependency graph.",
+          "supported": true,
+          "reason": "Supported by passages 2 and 3, which describe the union-find approximation and the high computational cost of exact tracking due to directed, changing graphs."
+        },
+        {
+          "claim": "The union-find data structure allows efficient merging of evicted components in near-constant time.",
+          "supported": true,
+          "reason": "Supported by passage 1, which explicitly states efficient, near-constant-time merging of components by unioning."
+        },
+        {
+          "claim": "The approximation reduces the worst-case time complexity of querying compute costs over the neighborhood to be linear in the number of adjacent storages instead of all ancestors and descendants.",
+          "supported": true,
+          "reason": "Supported by passage 2, which states this exact reduction in worst-case query complexity."
+        },
+        {
+          "claim": "This approximation also enables up to two orders of magnitude fewer metadata accesses per batch while performing nearly as well as the exact heuristic.",
+          "supported": true,
+          "reason": "Supported by passage 3, which mentions performance nearly as good as the exact heuristic and up to 2 orders of magnitude fewer metadata accesses per batch."
+        }
+      ],
+      "latency_ms": 2436.229934000039,
+      "input_tokens": 2765,
+      "output_tokens": 373,
+      "cost_usd": 0.0017028000000000002,
+      "judge_cost_usd": 0.00554,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-007",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Checkmate computes its rematerialization schedules by formulating the problem as a mixed integer linear program (MILP) that schedules computation and garbage collection to minimize execution time while respecting device memory limits. This MILP can be solved with standard solvers to find optimal or near-optimal schedules. The system uses a hardware-aware, profile-guided cost model and supports general non-linear computation graphs. Checkmate also employs a two-phase rounding strategy to approximate the optimal solver efficiently.",
+      "cited_chunk_ids": [
+        "checkmate2020:05-4-optimal-rematerialization:000",
+        "checkmate2020:01-abstract:000",
+        "checkmate2020:26-7-conclusion:000"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.3333333333333333,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Checkmate computes its rematerialization schedules by formulating the problem as a mixed integer linear program (MILP) that schedules computation and garbage collection to minimize execution time while respecting device memory limits.",
+          "supported": true,
+          "reason": "Passage [1] states the problem is formulated as a MILP that schedules computation and garbage collection, and seeks to minimize execution time under memory limits."
+        },
+        {
+          "claim": "This MILP can be solved with standard solvers to find optimal or near-optimal schedules.",
+          "supported": true,
+          "reason": "Passages [1] and [2] explain that standard commercial or open-source solvers are used, and mention both optimal and near-optimal schedules."
+        },
+        {
+          "claim": "The system uses a hardware-aware, profile-guided cost model and supports general non-linear computation graphs.",
+          "supported": true,
+          "reason": "Passage [3] says the method supports general non-linear computation graphs and uses a hardware-aware, profile-guided cost model."
+        },
+        {
+          "claim": "Checkmate also employs a two-phase rounding strategy to approximate the optimal solver efficiently.",
+          "supported": true,
+          "reason": "Passage [3] mentions a novel two-phase rounding strategy closely approximates the optimal solver."
+        }
+      ],
+      "latency_ms": 1762.1321159999752,
+      "input_tokens": 1804,
+      "output_tokens": 237,
+      "cost_usd": 0.0011008,
+      "judge_cost_usd": 0.00366,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-008",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Checkmate enables real-world networks to be trained with up to 5.1\u00d7 larger input sizes.",
+      "cited_chunk_ids": [
+        "checkmate2020:01-abstract:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Checkmate enables real-world networks to be trained with up to 5.1\u00d7 larger input sizes.",
+          "supported": true,
+          "reason": "The cited passage states this claim explicitly."
+        }
+      ],
+      "latency_ms": 899.6022740000171,
+      "input_tokens": 2320,
+      "output_tokens": 69,
+      "cost_usd": 0.0010384,
+      "judge_cost_usd": 0.001166,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-009",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "The operator costs in Checkmate's cost model come from profiling network layers on target hardware with random inputs across a range of batch sizes and input shapes, excluding static graph construction and input generation time.",
+      "cited_chunk_ids": [
+        "checkmate2020:15-4-10-cost-model:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "The operator costs in Checkmate's cost model come from profiling network layers on target hardware with random inputs across a range of batch sizes and input shapes.",
+          "supported": true,
+          "reason": "The passage states that costs are determined by profiling network layers on target hardware with random inputs across a range of batch sizes and input shapes."
+        },
+        {
+          "claim": "The profiling excludes static graph construction and input generation time.",
+          "supported": true,
+          "reason": "The passage explicitly says the costs exclude static graph construction and input generation time."
+        }
+      ],
+      "latency_ms": 1334.5445429999927,
+      "input_tokens": 2354,
+      "output_tokens": 97,
+      "cost_usd": 0.0010968,
+      "judge_cost_usd": 0.002154,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-010",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Chen et al.'s sublinear method reaches O(\\sqrt{n}) memory by dividing the n-layer network into \\sqrt{n} segments and storing only the intermediate outputs between segments, while recomputing internal states within each segment. This results in O(2\\sqrt{n}) memory cost. The extra compute needed is an additional forward pass during training to recompute the dropped intermediate states. This trades computation for memory, allowing deeper networks to be trained with less memory at the cost of some extra forward computation per mini-batch.",
+      "cited_chunk_ids": [
+        "gruslys2016-bptt:05-2-2-trading-memory-for-computation-time:000",
+        "chen2016-sublinear:00-front-matter:000",
+        "chen2016-sublinear:06-4-3-an-o-n-memory-cost-algorithm:000"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.3333333333333333,
+      "citation_hit": true,
+      "wrong_paper_citation": true,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Chen et al.'s sublinear method reaches O(\u221an) memory by dividing the n-layer network into \u221an segments and storing only the intermediate outputs between segments, while recomputing internal states within each segment.",
+          "supported": true,
+          "reason": "Passages [2] and [3] both describe achieving O(\u221an) memory by segmenting the network and storing only segment boundaries, with recomputation inside segments."
+        },
+        {
+          "claim": "This results in O(2\u221an) memory cost.",
+          "supported": true,
+          "reason": "Passage [3] explicitly calculates O(2\u221an) memory cost when k=\u221an."
+        },
+        {
+          "claim": "The extra compute needed is an additional forward pass during training to recompute the dropped intermediate states.",
+          "supported": true,
+          "reason": "Passages [2] and [3] specifically state that the method requires only an extra forward pass during training."
+        },
+        {
+          "claim": "This trades computation for memory, allowing deeper networks to be trained with less memory at the cost of some extra forward computation per mini-batch.",
+          "supported": true,
+          "reason": "Passages [2] and [3] state that this memory reduction comes by trading computation (recomputation via forward pass) for memory, enabling training of deeper networks."
+        }
+      ],
+      "latency_ms": 2002.1677070000123,
+      "input_tokens": 2428,
+      "output_tokens": 279,
+      "cost_usd": 0.0014176000000000002,
+      "judge_cost_usd": 0.004966,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-011",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Chen et al. reduced the memory cost of training a 1,000-layer deep residual network from 48GB to 7GB on ImageNet.",
+      "cited_chunk_ids": [
+        "chen2016-sublinear:00-front-matter:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Chen et al. reduced the memory cost of training a 1,000-layer deep residual network from 48GB to 7GB on ImageNet.",
+          "supported": true,
+          "reason": "The passage states: 'we can reduce the memory cost of a 1,000-layer deep residual network from 48G to 7G on ImageNet problems.'"
+        }
+      ],
+      "latency_ms": 986.201774000051,
+      "input_tokens": 2392,
+      "output_tokens": 84,
+      "cost_usd": 0.0010912,
+      "judge_cost_usd": 0.001736,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-012",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Coop says existing tensor rematerialization techniques overlook the memory system in deep learning frameworks and implicitly assume that free memory blocks at different addresses are identical. This flawed assumption leads to evicting discontiguous tensors, causing severe memory fragmentation and increasing the cost of potential rematerializations.",
+      "cited_chunk_ids": [
+        "coop2023:01-abstract:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Existing tensor rematerialization techniques overlook the memory system in deep learning frameworks and implicitly assume that free memory blocks at different addresses are identical.",
+          "supported": true,
+          "reason": "This statement is directly stated in the passage."
+        },
+        {
+          "claim": "This flawed assumption leads to evicting discontiguous tensors, causing severe memory fragmentation and increasing the cost of potential rematerializations.",
+          "supported": true,
+          "reason": "This claim is directly supported; the passage details these consequences."
+        }
+      ],
+      "latency_ms": 1298.6776490000693,
+      "input_tokens": 2053,
+      "output_tokens": 145,
+      "cost_usd": 0.0010532,
+      "judge_cost_usd": 0.001806,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-013",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Coop avoids memory fragmentation when evicting tensors by evicting a set of contiguous tensors using a sliding window algorithm, which moves within the memory pool until an optimal contiguous block is found. This approach ensures that the freed memory is contiguous and large enough for new allocations, minimizing recomputing cost. Additionally, Coop introduces a smart memory allocator that groups computationally \"cheap\" tensors together and enables recomputable in-place operations to prevent disruption of contiguous memory blocks, further reducing fragmentation.",
+      "cited_chunk_ids": [
+        "coop2023:04-2-2-tensor-rematerialization-and-memory-:001",
+        "coop2023:02-1-introduction:001",
+        "coop2023:08-3-2-method-overview:000",
+        "coop2023:02-1-introduction:002"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Coop avoids memory fragmentation when evicting tensors by evicting a set of contiguous tensors using a sliding window algorithm, which moves within the memory pool until an optimal contiguous block is found.",
+          "supported": true,
+          "reason": "This is stated in passages [1], [2], and [3]."
+        },
+        {
+          "claim": "This approach ensures that the freed memory is contiguous and large enough for new allocations, minimizing recomputing cost.",
+          "supported": true,
+          "reason": "This is supported by passages [2] and [4], which describe freeing enough contiguous memory with minimum recomputing cost."
+        },
+        {
+          "claim": "Coop introduces a smart memory allocator that groups computationally 'cheap' tensors together.",
+          "supported": true,
+          "reason": "Passages [3] and [4] mention that the smart memory allocator groups cheap tensors together."
+        },
+        {
+          "claim": "Coop's smart memory allocator enables recomputable in-place operations to prevent disruption of contiguous memory blocks, further reducing fragmentation.",
+          "supported": true,
+          "reason": "Passages [3] and [4] explicitly mention enabling recomputable in-place operations to prevent disruption of contiguous memory blocks."
+        }
+      ],
+      "latency_ms": 2193.564433000006,
+      "input_tokens": 2149,
+      "output_tokens": 283,
+      "cost_usd": 0.0013124,
+      "judge_cost_usd": 0.005068,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-014",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "MONeT jointly optimizes the checkpointing schedule and the implementation of various operators, including convolution algorithms. It reduces the overall memory requirement by 3\u00d7 for various models, with a 9-16% overhead in computation. For example, MONeT reaches peak memory of 8 GB for ResNet-50 compared to 14.7 GB for PyTorch, and reduces memory usage to 0.54\u00d7 of PyTorch for 3D-UNet.",
+      "cited_chunk_ids": [
+        "monet2021:02-1-introduction:001",
+        "monet2021:06-5-experiments:006",
+        "monet2021:19-h-solver-time-and-ilp-statistics:003"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.3333333333333333,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "MONeT jointly optimizes the checkpointing schedule and the implementation of various operators, including convolution algorithms.",
+          "supported": true,
+          "reason": "Passages 1 and 2 specifically state that MONeT jointly optimizes checkpointing schedules and operator implementations (including convolution algorithms)."
+        },
+        {
+          "claim": "MONeT reduces the overall memory requirement by 3\u00d7 for various models, with a 9-16% overhead in computation.",
+          "supported": true,
+          "reason": "Passage 1 states MONeT reduces memory by 3\u00d7 for various models with a 9-16% computation overhead."
+        },
+        {
+          "claim": "MONeT reaches peak memory of 8 GB for ResNet-50 compared to 14.7 GB for PyTorch.",
+          "supported": true,
+          "reason": "Passage 2 directly states these numbers in a case study."
+        },
+        {
+          "claim": "MONeT reduces memory usage to 0.54\u00d7 of PyTorch for 3D-UNet.",
+          "supported": true,
+          "reason": "Passage 3 states 'MONET reduces memory usage to 0.54\u00d7 of PyTorch' for 3D-UNet."
+        }
+      ],
+      "latency_ms": 2119.7642839999844,
+      "input_tokens": 2360,
+      "output_tokens": 269,
+      "cost_usd": 0.0013744,
+      "judge_cost_usd": 0.004732,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "MONET jointly optimizes the checkpointing schedule and the implementation of various operators. MONET reduces the overall memory requirement by 3\u00d7 for various PyTorch models, with a 9-16% overhead in "
+      ],
+      "error": null
+    },
+    {
+      "id": "remat-015",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Gruslys et al.'s BPTT method (BPTT-ISM) saves 95% of memory for sequences of length 1000 (excluding input vectors) while using only 33% more time per training iteration than the standard BPTT.",
+      "cited_chunk_ids": [
+        "gruslys2016-bptt:08-3-2-backpropagation-though-time-with-sel:002"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Gruslys et al.'s BPTT method (BPTT-ISM) saves 95% of memory for sequences of length 1000 (excluding input vectors).",
+          "supported": true,
+          "reason": "The passage directly states this memory saving percentage for sequences of 1000."
+        },
+        {
+          "claim": "BPTT-ISM uses only 33% more time per training iteration than the standard BPTT.",
+          "supported": true,
+          "reason": "The passage explicitly says this, assuming a single backward step is twice as expensive as a forward step."
+        }
+      ],
+      "latency_ms": 1231.4878230000659,
+      "input_tokens": 1861,
+      "output_tokens": 134,
+      "cost_usd": 0.0009588000000000001,
+      "judge_cost_usd": 0.001858,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "remat-016",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "SuperNeurons combines three memory optimizations: Liveness Analysis, Unified Tensor Pool (UTP), and Cost-Aware Recomputation. Liveness Analysis recycles free tensors during back-propagation to reduce memory usage. UTP offloads tensors in compute-intensive layers to external memory and overlaps communication with computation. Cost-Aware Recomputation drops forward results of cheap-to-compute layers and reconstructs them to minimize peak memory usage.",
+      "cited_chunk_ids": [
+        "superneurons2018:05-3-design-methodologies:000",
+        "superneurons2018:01-abstract:000",
+        "superneurons2018:02-1-introduction:002"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.3333333333333333,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "SuperNeurons combines three memory optimizations: Liveness Analysis, Unified Tensor Pool (UTP), and Cost-Aware Recomputation.",
+          "supported": true,
+          "reason": "Passages 2 and 3 both state that SuperNeurons uses these three techniques."
+        },
+        {
+          "claim": "Liveness Analysis recycles free tensors during back-propagation to reduce memory usage.",
+          "supported": true,
+          "reason": "Passages 1 and 3 both describe that Liveness Analysis recycles tensors during back-propagation to save memory."
+        },
+        {
+          "claim": "UTP offloads tensors in compute-intensive layers to external memory and overlaps communication with computation.",
+          "supported": true,
+          "reason": "Passage 3 explicitly mentions UTP offloads tensors in compute-intensive layers (checkpoints) to external memory and overlaps communication with computation."
+        },
+        {
+          "claim": "Cost-Aware Recomputation drops forward results of cheap-to-compute layers and reconstructs them to minimize peak memory usage.",
+          "supported": true,
+          "reason": "Passage 3 says Cost-Aware Recomputation drops results of cheap-to-compute (non-checkpoint) layers and reconstructs them for lower peak memory usage."
+        }
+      ],
+      "latency_ms": 2208.833049000077,
+      "input_tokens": 2184,
+      "output_tokens": 317,
+      "cost_usd": 0.0013808000000000002,
+      "judge_cost_usd": 0.00471,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "offload-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "vDNN can train VGG-16 with a batch size of 256 on a 12 GB Titan X GPU, which normally requires 28 GB of memory. This is achieved by virtualizing memory usage across GPU and CPU, allowing training with an 18% performance loss compared to an oracular GPU with sufficient memory.",
+      "cited_chunk_ids": [
+        "vdnn2016:00-front-matter:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "vDNN can train VGG-16 with a batch size of 256 on a 12 GB Titan X GPU.",
+          "supported": true,
+          "reason": "The passage states that vDNN enables VGG-16 with batch size 256 to be trained on a single NVIDIA Titan X GPU card containing 12 GB of memory."
+        },
+        {
+          "claim": "VGG-16 with a batch size of 256 normally requires 28 GB of memory.",
+          "supported": true,
+          "reason": "The passage states that VGG-16 with batch size 256 requires 28 GB of memory."
+        },
+        {
+          "claim": "This is achieved by virtualizing memory usage across GPU and CPU.",
+          "supported": true,
+          "reason": "The passage explains that vDNN virtualizes memory usage such that both GPU and CPU memory can be utilized for training larger DNNs."
+        },
+        {
+          "claim": "Training with vDNN incurs an 18% performance loss compared to an oracular GPU with enough memory to hold the entire DNN.",
+          "supported": true,
+          "reason": "The passage states that training VGG-16 with vDNN on a 12 GB GPU results in 18% performance loss compared to a hypothetical, oracular GPU with enough memory."
+        }
+      ],
+      "latency_ms": 1260.8923259999756,
+      "input_tokens": 2539,
+      "output_tokens": 150,
+      "cost_usd": 0.0012556,
+      "judge_cost_usd": 0.003228,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-001",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Checkmate plans rematerialization ahead of time using an integer linear programming (ILP) solver, requiring full ahead-of-time knowledge of the model. DTR decides evictions at runtime dynamically without ahead-of-time knowledge, using heuristics and runtime state management.",
+      "cited_chunk_ids": [
+        "dtr2021:08-4-3-comparing-dtr-to-static-techniques:000",
+        "dtr2021:24-c-4-implementation-details:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Checkmate plans rematerialization ahead of time using an integer linear programming (ILP) solver, requiring full ahead-of-time knowledge of the model.",
+          "supported": true,
+          "reason": "Passage [1] states Checkmate requires full ahead-of-time knowledge and uses an ILP solver to compute solutions ahead of time."
+        },
+        {
+          "claim": "DTR decides evictions at runtime dynamically without ahead-of-time knowledge, using heuristics and runtime state management.",
+          "supported": true,
+          "reason": "Passages [1] and [2] state that DTR finds solutions dynamically without ahead-of-time knowledge and manages runtime state including evictions."
+        }
+      ],
+      "latency_ms": 2185.96129499997,
+      "input_tokens": 2462,
+      "output_tokens": 170,
+      "cost_usd": 0.0012568000000000002,
+      "judge_cost_usd": 0.002808,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-002",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "DTR's proven memory bound for a linear feedforward network with a memory budget of \\(\\Omega(\\sqrt{N})\\) requires only \\(O(N)\\) tensor operations, matching the Chen et al. (2016) static checkpointing technique's bound up to constant factors. However, DTR's dynamic approach cannot always match the overhead of static checkpointing, as an adversary could construct a network where DTR performs a factor of \\(\\Omega(N/B)\\) more tensor operations than an optimal static checkpointing algorithm. Thus, DTR achieves the same asymptotic bound as Chen et al. but may have higher overhead in worst cases under any deterministic heuristic.",
+      "cited_chunk_ids": [
+        "dtr2021:04-3-formal-bounds:000",
+        "dtr2021:04-3-formal-bounds:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "DTR's proven memory bound for a linear feedforward network with a memory budget of \\(\\Omega(\\sqrt{N})\\) requires only \\(O(N)\\) tensor operations.",
+          "supported": true,
+          "reason": "This is explicitly stated in the passages."
+        },
+        {
+          "claim": "This matches the Chen et al. (2016) static checkpointing technique's bound up to constant factors.",
+          "supported": true,
+          "reason": "The passages say DTR has the same bound (up to constant factors) as Chen et al. (2016)."
+        },
+        {
+          "claim": "DTR's dynamic approach cannot always match the overhead of static checkpointing, as an adversary could construct a network where DTR performs a factor of \\(\\Omega(N/B)\\) more tensor operations than an optimal static checkpointing algorithm.",
+          "supported": true,
+          "reason": "The passages state that an adversary could construct such a network under any deterministic heuristic."
+        },
+        {
+          "claim": "Thus, DTR achieves the same asymptotic bound as Chen et al. but may have higher overhead in worst cases under any deterministic heuristic.",
+          "supported": true,
+          "reason": "This is a restatement of what is established in the passages about asymptotic bounds and possible higher overhead."
+        }
+      ],
+      "latency_ms": 2524.238126,
+      "input_tokens": 2050,
+      "output_tokens": 330,
+      "cost_usd": 0.001348,
+      "judge_cost_usd": 0.00452,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-003",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "The paper \"Reducing Activation Recomputation in Large Transformer Models\" (korthikanti2022-selective) reports that full activation recomputation can add 30-40% compute overhead when training large transformers.",
+      "cited_chunk_ids": [
+        "korthikanti2022-selective:11-5-selective-activation-recomputation:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "The paper reports that full activation recomputation can add 30-40% compute overhead when training large transformers.",
+          "supported": true,
+          "reason": "The passage states that full activation recomputation can introduce as much as 30\u201340% computational time overhead."
+        }
+      ],
+      "latency_ms": 1124.3381890000137,
+      "input_tokens": 2195,
+      "output_tokens": 95,
+      "cost_usd": 0.00103,
+      "judge_cost_usd": 0.001808,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-004",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Coop argues that the assumption made by earlier rematerialization methods such as DTR is that memory in deep learning systems is a fungible commodity where free memory blocks at different addresses are identical. This assumption is flawed because evicting tensors with size x is not sufficient for allocating a tensor with size x unless all evicted tensors are contiguous, and evicting non-contiguous tensors leads to memory fragmentation and increased rematerialization costs.",
+      "cited_chunk_ids": [
+        "coop2023:02-1-introduction:001"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Coop argues that the assumption made by earlier rematerialization methods such as DTR is that memory in deep learning systems is a fungible commodity where free memory blocks at different addresses are identical.",
+          "supported": true,
+          "reason": "The passage explicitly states that prior rematerialization methods, including DTR, assume memory is a fungible commodity where free memory blocks at different addresses are identical."
+        },
+        {
+          "claim": "This assumption is flawed because evicting tensors with size x is not sufficient for allocating a tensor with size x unless all evicted tensors are contiguous, and evicting non-contiguous tensors leads to memory fragmentation and increased rematerialization costs.",
+          "supported": true,
+          "reason": "The passage states that evicting tensors with size x is not enough unless they are contiguous, and that non-contiguous eviction leads to fragmentation and increased costs."
+        }
+      ],
+      "latency_ms": 1632.974560999969,
+      "input_tokens": 2472,
+      "output_tokens": 215,
+      "cost_usd": 0.0013328,
+      "judge_cost_usd": 0.002784,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-005",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Rockmate does not run Checkmate's solver over the whole model because Checkmate's ILP model complexity grows exponentially with the size of the network, making it infeasible for modern neural networks with thousands of nodes. Instead, Rockmate applies Checkmate inside each block, which keeps the solving time nearly constant even as the number of blocks increases, allowing efficient and fast solutions. This approach avoids the exponential solving time that would occur if Checkmate were run on the entire model at once.",
+      "cited_chunk_ids": [
+        "rockmate2023:11-4-3-efficiency:000",
+        "rockmate2023:11-4-3-efficiency:001",
+        "rockmate2023:04-3-1-sketch-of-the-algorithm:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Rockmate does not run Checkmate's solver over the whole model because Checkmate's ILP model complexity grows exponentially with the size of the network, making it infeasible for modern neural networks with thousands of nodes.",
+          "supported": true,
+          "reason": "The passages state that Checkmate's ILP model complexity grows exponentially with network size and is infeasible for large networks. Rockmate avoids this by not using the global Checkmate solver."
+        },
+        {
+          "claim": "Rockmate applies Checkmate inside each block, which keeps the solving time nearly constant even as the number of blocks increases, allowing efficient and fast solutions.",
+          "supported": true,
+          "reason": "Passages indicate that Rockmate applies Checkmate to each block and that the solution time remains nearly constant as blocks increase."
+        },
+        {
+          "claim": "This approach avoids the exponential solving time that would occur if Checkmate were run on the entire model at once.",
+          "supported": true,
+          "reason": "The passages say that running Checkmate globally causes exponential solving time, which Rockmate avoids by its blockwise method."
+        }
+      ],
+      "latency_ms": 2984.2171909999706,
+      "input_tokens": 2431,
+      "output_tokens": 244,
+      "cost_usd": 0.0013628000000000002,
+      "judge_cost_usd": 0.004608,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-006",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "The speed-centric recomputation strategy keeps the recomputed tensors so that other backward layers can directly reuse them. MXNet adopts this strategy.",
+      "cited_chunk_ids": [
+        "superneurons2018:12-3-4-cost-aware-recomputation:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "The speed-centric recomputation strategy keeps the recomputed tensors so that other backward layers can directly reuse them.",
+          "supported": true,
+          "reason": "The passage states that the speed-centric strategy keeps the recomputed tensors for reuse by other backward layers."
+        },
+        {
+          "claim": "MXNet adopts the speed-centric recomputation strategy.",
+          "supported": true,
+          "reason": "The passage explicitly states that MXNet adopts the speed-centric strategy."
+        }
+      ],
+      "latency_ms": 996.1428059999662,
+      "input_tokens": 2705,
+      "output_tokens": 88,
+      "cost_usd": 0.0012228,
+      "judge_cost_usd": 0.002084,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-001",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "The sources do not mention the memory budget required by Checkmate to train GPT-4 specifically.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 823.6401560000104,
+      "input_tokens": 2935,
+      "output_tokens": 30,
+      "cost_usd": 0.001222,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-002",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "The sources do not provide any information about the performance of DTR combined with ZeRO-3 sharding on 1,024 GPUs.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 870.9164189999683,
+      "input_tokens": 3111,
+      "output_tokens": 39,
+      "cost_usd": 0.0013068,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-003",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "None of the sources mention evaluation on Apple M-series GPUs for any rematerialization paper.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 680.9749420000344,
+      "input_tokens": 2070,
+      "output_tokens": 29,
+      "cost_usd": 0.0008744,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-004",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "The sources describe Checkmate's MILP solver formulation, runtime, and optimization goals but do not provide any information on the energy consumption in kWh per schedule.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 735.6935200000407,
+      "input_tokens": 1358,
+      "output_tokens": 43,
+      "cost_usd": 0.000612,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "zero-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO's optimizer-state partitioning reduces model-state memory from 4\u03a8 + 12\u03a8 to approximately 4\u03a8 bytes when the data-parallel degree Nd is large, leading to a 4x reduction in memory consumption. For example, with Nd = 64, memory reduces from 120 GB to 31.4 GB for a 7.5 billion parameter model.",
+      "cited_chunk_ids": [
+        "zero2020:18-5-1-pos-optimizer-state-partitioning:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO's optimizer-state partitioning reduces model-state memory from 4\u03a8 + 12\u03a8 to approximately 4\u03a8 bytes when the data-parallel degree Nd is large.",
+          "supported": true,
+          "reason": "The passage states that the memory requirement reduces from 4\u03a8 + 12\u03a8 bytes to approximately 4\u03a8 bytes when Nd is large."
+        },
+        {
+          "claim": "This leads to a 4x reduction in memory consumption.",
+          "supported": true,
+          "reason": "The passage says this reduction means a 4x reduction."
+        },
+        {
+          "claim": "For example, with Nd = 64, memory reduces from 120 GB to 31.4 GB for a 7.5 billion parameter model.",
+          "supported": true,
+          "reason": "The passage states explicitly that for Nd = 64, memory reduces from 120 GB to 31.4 GB for a 7.5B parameter model."
+        }
+      ],
+      "latency_ms": 1798.150095999972,
+      "input_tokens": 2124,
+      "output_tokens": 229,
+      "cost_usd": 0.001216,
+      "judge_cost_usd": 0.002558,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "zero-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO's parameter partitioning increases the total communication volume to 1.5 times that of baseline data parallelism (DP). Specifically, the total communication volume with parameter partitioning is 3\u03a8, which is 1.5x compared to the baseline DP communication volume of 2\u03a8. This increase is due to the need for broadcasting parameters during forward and backward propagation and the reducescatter of gradients, but the communication is pipelined to avoid memory overhead.",
+      "cited_chunk_ids": [
+        "zero2020:20-5-3-pp-parameter-partitioning:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 0.25,
+      "judged_claims": [
+        {
+          "claim": "ZeRO's parameter partitioning increases the total communication volume to 1.5 times that of baseline data parallelism (DP).",
+          "supported": true,
+          "reason": "The passage states that parameter partitioning increases the total communication volume to 1.5x of the baseline DP system."
+        },
+        {
+          "claim": "The total communication volume with parameter partitioning is 3\u03a8, which is 1.5x compared to the baseline DP communication volume of 2\u03a8.",
+          "supported": false,
+          "reason": "The passage does not provide specific numbers (3\u03a8 or 2\u03a8) regarding communication volume."
+        },
+        {
+          "claim": "This increase is due to the need for broadcasting parameters during forward and backward propagation and the reducescatter of gradients.",
+          "supported": false,
+          "reason": "While the passage mentions broadcasting parameters, it does not specify reducescatter of gradients as a reason for the communication increase."
+        },
+        {
+          "claim": "The communication is pipelined to avoid memory overhead.",
+          "supported": false,
+          "reason": "There is no mention in the cited passage of pipelining communication to avoid memory overhead."
+        }
+      ],
+      "latency_ms": 1730.1259040000332,
+      "input_tokens": 2123,
+      "output_tokens": 222,
+      "cost_usd": 0.0012044,
+      "judge_cost_usd": 0.002838,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "The total communication volume is therefore 3\u03a8 which is 1.5x compared to the baseline. Both gradient and parameter partitioning leverage the insight that - not all states of gradients and parameters a"
+      ],
+      "error": null
+    },
+    {
+      "id": "zero-003",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "In mixed-precision Adam training according to ZeRO, the fp32 optimizer states (momentum and variance) each take 4\u03a8 bytes of memory, where \u03a8 is the number of parameters. Thus, the fp32 optimizer states consume 8\u03a8 bytes in total (4\u03a8 for momentum and 4\u03a8 for variance).",
+      "cited_chunk_ids": [
+        "zero2020:10-3-1-model-states-optimizer-states-gradie:000",
+        "zero2020:10-3-1-model-states-optimizer-states-gradie:001"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "In mixed-precision Adam training according to ZeRO, the fp32 optimizer states (momentum and variance) each take 4\u03a8 bytes of memory, where \u03a8 is the number of parameters.",
+          "supported": true,
+          "reason": "Passages explicitly state momentum and variance each require 4\u03a8 bytes in fp32."
+        },
+        {
+          "claim": "Thus, the fp32 optimizer states consume 8\u03a8 bytes in total (4\u03a8 for momentum and 4\u03a8 for variance).",
+          "supported": true,
+          "reason": "Summing 4\u03a8 for momentum and 4\u03a8 for variance directly equals 8\u03a8 bytes, which matches the passage details."
+        }
+      ],
+      "latency_ms": 1553.1208259999403,
+      "input_tokens": 2570,
+      "output_tokens": 184,
+      "cost_usd": 0.0013224,
+      "judge_cost_usd": 0.002846,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "zero-004",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "A 7.5B-parameter model requires about 1.9 GB of model-state memory with all three ZeRO stages (Pos+g+p) at 64-way data parallelism (Nd=64). This represents a 64x memory reduction compared to standard data parallelism, which would require 120 GB. This is because ZeRO partitions optimizer states, gradients, and parameters, reducing memory consumption linearly with the DP degree (Nd).",
+      "cited_chunk_ids": [
+        "zero2020:20-5-3-pp-parameter-partitioning:000",
+        "zero2020:21-5-4-implication-on-model-size:000",
+        "zero2020:02-1-extended-introduction:002"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.6666666666666666,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "A 7.5B-parameter model requires about 1.9 GB of model-state memory with all three ZeRO stages (Pos+g+p) at 64-way data parallelism (Nd=64).",
+          "supported": true,
+          "reason": "Passage [1] states this example directly."
+        },
+        {
+          "claim": "This represents a 64x memory reduction compared to standard data parallelism, which would require 120 GB.",
+          "supported": true,
+          "reason": "Passage [1] gives these numbers and states this memory reduction; this is restated in Passage [3]."
+        },
+        {
+          "claim": "This is because ZeRO partitions optimizer states, gradients, and parameters, reducing memory consumption linearly with the DP degree (Nd).",
+          "supported": true,
+          "reason": "Passage [3] explains the memory reduction comes from partitioning optimizer states, gradients, and parameters and is linear with Nd for all three stages."
+        }
+      ],
+      "latency_ms": 2347.6575570000477,
+      "input_tokens": 2214,
+      "output_tokens": 322,
+      "cost_usd": 0.0014008000000000002,
+      "judge_cost_usd": 0.004014,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "zero-005",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO can train models with up to 13 billion parameters without model parallelism on 128 GPUs, achieving throughput over 40 TFlops per GPU on average. This is significantly larger than the 1.4 billion parameter limit with data parallelism alone without ZeRO (zero2020, source 1).",
+      "cited_chunk_ids": [
+        "zero2020:35-10-4-democratizing-large-model-training:000",
+        "zero2020:35-10-4-democratizing-large-model-training:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO can train models with up to 13 billion parameters without model parallelism on 128 GPUs, achieving throughput over 40 TFlops per GPU on average.",
+          "supported": true,
+          "reason": "This information is directly stated in the passages."
+        },
+        {
+          "claim": "This is significantly larger than the 1.4 billion parameter limit with data parallelism alone without ZeRO.",
+          "supported": true,
+          "reason": "The passages state that without ZeRO, the largest trainable model with DP alone has 1.4B parameters."
+        }
+      ],
+      "latency_ms": 1465.0120179999249,
+      "input_tokens": 2262,
+      "output_tokens": 167,
+      "cost_usd": 0.001172,
+      "judge_cost_usd": 0.002278,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "zero-006",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO's gradient partitioning amounts to a scatter-reduce operation on the gradients, followed by an allgather operation to collect all the updated parameters from all data parallel processes.",
+      "cited_chunk_ids": [
+        "zero2020:27-7-2-1-communication-volume-with-pos-g:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO's gradient partitioning amounts to a scatter-reduce operation on the gradients.",
+          "supported": true,
+          "reason": "The passage states that ZeRO only requires a scatter-reduce operation on the gradients with gradient partitioning."
+        },
+        {
+          "claim": "ZeRO's approach is followed by an allgather operation to collect all the updated parameters from all data parallel processes.",
+          "supported": true,
+          "reason": "The passage states that after each process updates its partition of parameters, an allgather is performed to collect all updated parameters from all data parallel processes."
+        }
+      ],
+      "latency_ms": 1354.8597089999248,
+      "input_tokens": 1918,
+      "output_tokens": 138,
+      "cost_usd": 0.000988,
+      "judge_cost_usd": 0.001732,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "offload-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Offload can train models with over 13 billion parameters on a single NVIDIA V100 GPU, which is about a 10x increase in size compared to popular frameworks like PyTorch that can train up to 1.4 billion parameters on a single GPU without running out of memory. This is achieved by offloading model states and compute to CPU memory, maximizing GPU memory savings without sacrificing computational efficiency.",
+      "cited_chunk_ids": [
+        "zero-offload2021:01-abstract:000",
+        "zero-offload2021:18-6-2-1-model-scale:000"
+      ],
+      "citation_precision": 0.5,
+      "citation_precision_page": 0.5,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Offload can train models with over 13 billion parameters on a single NVIDIA V100 GPU.",
+          "supported": true,
+          "reason": "Passage [1] states that ZeRO-Offload can train models with over 13 billion parameters on a single GPU."
+        },
+        {
+          "claim": "This is about a 10x increase in size compared to popular frameworks like PyTorch that can train up to 1.4 billion parameters on a single GPU without running out of memory.",
+          "supported": true,
+          "reason": "Passages [1] and [2] both state that PyTorch can train up to 1.4B params, and ZeRO-Offload can train over 13B, which is about a 10x increase."
+        },
+        {
+          "claim": "This is achieved by offloading model states and compute to CPU memory, maximizing GPU memory savings without sacrificing computational efficiency.",
+          "supported": true,
+          "reason": "Passage [1] directly states ZeRO-Offload offloads data and compute to CPU and is designed to maximize memory savings and maintain computational efficiency."
+        }
+      ],
+      "latency_ms": 2079.792408000003,
+      "input_tokens": 2607,
+      "output_tokens": 300,
+      "cost_usd": 0.0015228,
+      "judge_cost_usd": 0.003866,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "ZeRO-Offload can be enabled with a few lines of change. The code on left shows a standard training pipeline, while the right shows the same pipeline with ZeRO-Offload enabled. ... which allows us to t"
+      ],
+      "error": null
+    },
+    {
+      "id": "offload-003",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Offload's one-step delayed parameter update (DPU) is designed to overlap CPU and GPU computation to hide the CPU computation overhead, especially during training with very small batch sizes where CPU computation can become a bottleneck. It delays the parameter update by one step, allowing the CPU optimizer step to be performed in parallel with the GPU forward and backward passes, thus improving training throughput without impacting final accuracy.",
+      "cited_chunk_ids": [
+        "zero-offload2021:15-5-2-one-step-delayed-parameter-update:000",
+        "zero-offload2021:22-b-one-step-delayed-parameter-update-dpu:000"
+      ],
+      "citation_precision": 0.5,
+      "citation_precision_page": 0.5,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Offload's one-step delayed parameter update (DPU) is designed to overlap CPU and GPU computation to hide the CPU computation overhead.",
+          "supported": true,
+          "reason": "Passage [1] explicitly says DPU overlaps CPU and GPU compute to hide the CPU computation overhead."
+        },
+        {
+          "claim": "DPU is especially useful during training with very small batch sizes where CPU computation can become a bottleneck.",
+          "supported": true,
+          "reason": "Passage [1] directly states this."
+        },
+        {
+          "claim": "DPU delays the parameter update by one step, allowing the CPU optimizer step to be performed in parallel with the GPU forward and backward passes.",
+          "supported": true,
+          "reason": "Passage [1] describes this workflow in detail."
+        },
+        {
+          "claim": "DPU improves training throughput.",
+          "supported": true,
+          "reason": "Passage [2] provides data showing throughput improvement with DPU."
+        },
+        {
+          "claim": "DPU does not impact final accuracy.",
+          "supported": true,
+          "reason": "Both passages [1] and [2] state that DPU does not hurt final accuracy if introduced after a few dozen iterations."
+        }
+      ],
+      "latency_ms": 1505.1252029999205,
+      "input_tokens": 2477,
+      "output_tokens": 176,
+      "cost_usd": 0.0012724000000000001,
+      "judge_cost_usd": 0.004182,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "offload-004",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Offload does not use delayed parameter updates from the first step to avoid destabilizing the training during the early stages where gradients change rapidly. The first N-1 steps are trained without delayed parameter update to allow the training to stabilize before introducing the delay, as the 1-step staleness is well tolerated only after the initial training phase.",
+      "cited_chunk_ids": [
+        "zero-offload2021:15-5-2-one-step-delayed-parameter-update:000",
+        "zero-offload2021:15-5-2-one-step-delayed-parameter-update:001",
+        "zero-offload2021:22-b-one-step-delayed-parameter-update-dpu:000"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.6666666666666666,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Offload does not use delayed parameter updates from the first step to avoid destabilizing the training during the early stages where gradients change rapidly.",
+          "supported": true,
+          "reason": "Passage [1] states that the first N\u22121 steps are trained without DPU to avoid destabilizing training during the early stages where gradients change rapidly."
+        },
+        {
+          "claim": "The first N-1 steps are trained without delayed parameter update to allow the training to stabilize before introducing the delay, as the 1-step staleness is well tolerated only after the initial training phase.",
+          "supported": true,
+          "reason": "Passage [1] directly states that DPU is introduced after a few dozen iterations to avoid destabilizing early training and that staleness is tolerated after initial stabilization."
+        }
+      ],
+      "latency_ms": 1543.2112290000077,
+      "input_tokens": 2358,
+      "output_tokens": 177,
+      "cost_usd": 0.0012264,
+      "judge_cost_usd": 0.004044,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "offload-005",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Infinity uses GPU memory, CPU memory, and NVMe storage for memory management. It offloads partitioned model states to CPU or NVMe memory or keeps them on the GPU, offloads activation memory to CPU memory, and exploits the large NVMe storage available in modern GPU clusters.",
+      "cited_chunk_ids": [
+        "zero-infinity2021:09-5-1-design-for-unprecedented-scale:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Infinity uses GPU memory, CPU memory, and NVMe storage for memory management.",
+          "supported": true,
+          "reason": "Passage [1] describes the use of GPU, CPU, and NVMe memory in ZeRO-Infinity's memory management."
+        },
+        {
+          "claim": "ZeRO-Infinity offloads partitioned model states to CPU or NVMe memory or keeps them on the GPU.",
+          "supported": true,
+          "reason": "Passage [1] states that ZeRO-Infinity's offload engine can offload partitioned model states to CPU or NVMe or keep them on GPU."
+        },
+        {
+          "claim": "ZeRO-Infinity offloads activation memory to CPU memory.",
+          "supported": true,
+          "reason": "Passage [1] specifically mentions offloading activation memory to CPU memory."
+        },
+        {
+          "claim": "ZeRO-Infinity exploits the large NVMe storage available in modern GPU clusters.",
+          "supported": true,
+          "reason": "Passage [1] notes that ZeRO-Infinity exploits the massive NVMe storage available in clusters."
+        }
+      ],
+      "latency_ms": 1915.6176550000055,
+      "input_tokens": 1975,
+      "output_tokens": 238,
+      "cost_usd": 0.0011708,
+      "judge_cost_usd": 0.003108,
+      "dropped_citations": 2,
+      "dropped_quotes": [
+        "ZeRO-Infinity is built on top of ZeRO-3 which partitions all model states to remove memory redundancy... ZeRO-Infinity is designed with a powerful offload mechanism called the infinity offload engine ",
+        "In addition to model states, ZeRO-Infinity can offload activation memory to CPU memory, when necessary."
+      ],
+      "error": null
+    },
+    {
+      "id": "offload-006",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Infinity copes with the limited supply of pinned memory by managing it through a pinned memory management layer that reuses a small amount (tens of GBs) of pinned memory buffers for offloading the entire model states (up to tens of TBs) to CPU or NVMe. This reuse prevents memory fragmentation and allows PyTorch tensors to be provided with pinned memory data for in-place computation, enabling direct writes to NVMe without extra copies, thus improving bandwidth.",
+      "cited_chunk_ids": [
+        "zero-infinity2021:15-6-3-infinity-offload-engine:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Infinity manages the limited supply of pinned memory through a pinned memory management layer that reuses a small amount (tens of GBs) of pinned memory buffers for offloading the entire model states (up to tens of TBs) to CPU or NVMe.",
+          "supported": true,
+          "reason": "The passage states that the pinned memory management layer reuses a small amount (tens of GBs) of pinned memory for offloading entire model states (up to tens of TBs)."
+        },
+        {
+          "claim": "This reuse prevents memory fragmentation and allows PyTorch tensors to be provided with pinned memory data for in-place computation, enabling direct writes to NVMe without extra copies, thus improving bandwidth.",
+          "supported": true,
+          "reason": "The passage states that reuse of memory buffers prevents memory fragmentation and provides PyTorch tensors with pinned memory data for inplace computation, so that they can be written to NVMe without further copies for improved bandwidth."
+        }
+      ],
+      "latency_ms": 2114.563557999986,
+      "input_tokens": 1996,
+      "output_tokens": 276,
+      "cost_usd": 0.00124,
+      "judge_cost_usd": 0.002832,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "offload-007",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Infinity states that it requires 800 NVIDIA V100 GPUs just to fit a trillion parameter model for training.",
+      "cited_chunk_ids": [
+        "zero-infinity2021:01-abstract:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Infinity states that it requires 800 NVIDIA V100 GPUs just to fit a trillion parameter model for training.",
+          "supported": true,
+          "reason": "The passage explicitly states that it requires 800 NVIDIA V100 GPUs just to fit a trillion parameter model for training."
+        }
+      ],
+      "latency_ms": 960.3192429999581,
+      "input_tokens": 2354,
+      "output_tokens": 61,
+      "cost_usd": 0.0010392,
+      "judge_cost_usd": 0.001646,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "pipe-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "GPipe splits every mini-batch of size N into M equal micro-batches, which are then pipelined through the K accelerators. Gradients for each micro-batch are computed based on the same model parameters used for the forward pass, and at the end of each mini-batch, gradients from all M micro-batches are accumulated and applied to update the model parameters across all accelerators.",
+      "cited_chunk_ids": [
+        "gpipe2019:05-2-2-algorithm:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "GPipe splits every mini-batch of size N into M equal micro-batches, which are then pipelined through the K accelerators.",
+          "supported": true,
+          "reason": "The passage states that GPipe divides every mini-batch of size N into M equal micro-batches, which are pipelined through the K accelerators."
+        },
+        {
+          "claim": "Gradients for each micro-batch are computed based on the same model parameters used for the forward pass.",
+          "supported": true,
+          "reason": "The passage states that gradients for each micro-batch are computed based on the same model parameters used for the forward pass."
+        },
+        {
+          "claim": "At the end of each mini-batch, gradients from all M micro-batches are accumulated and applied to update the model parameters across all accelerators.",
+          "supported": true,
+          "reason": "The passage states that at the end of each mini-batch, gradients from all M micro-batches are accumulated and applied to update the model parameters across all accelerators."
+        }
+      ],
+      "latency_ms": 1457.4099949999209,
+      "input_tokens": 2263,
+      "output_tokens": 190,
+      "cost_usd": 0.0012092000000000001,
+      "judge_cost_usd": 0.003084,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "pipe-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "GPipe's pipeline bubble overhead is negligible when the number of micro-batches M is at least 4 times the number of partitions K (M \u2265 4 \u00d7 K). This is because the bubble time is amortized over the number of micro-steps, and with sufficient micro-batches, the idle time per accelerator becomes small. Additionally, recomputation during the backward pass can be scheduled earlier, further reducing the bubble overhead.",
+      "cited_chunk_ids": [
+        "gpipe2019:06-2-3-performance-optimization:000",
+        "gpipe2019:07-3-performance-analyses:001"
+      ],
+      "citation_precision": 0.5,
+      "citation_precision_page": 0.5,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "GPipe's pipeline bubble overhead is negligible when the number of micro-batches M is at least 4 times the number of partitions K (M \u2265 4 \u00d7 K).",
+          "supported": true,
+          "reason": "Both passages [1] and [2] state that bubble overhead is negligible when M \u2265 4 \u00d7 K."
+        },
+        {
+          "claim": "The bubble time is amortized over the number of micro-steps, and with sufficient micro-batches, the idle time per accelerator becomes small.",
+          "supported": true,
+          "reason": "Passage [1] describes that bubble time is O((K\u22121)/(M+K\u22121)) amortized over M, and [2] confirms the bubble overhead is negligible with sufficient M."
+        },
+        {
+          "claim": "Recomputation during the backward pass can be scheduled earlier, further reducing the bubble overhead.",
+          "supported": true,
+          "reason": "Passage [1] mentions that recomputation during the backward pass can be scheduled earlier, which helps reduce the bubble overhead."
+        }
+      ],
+      "latency_ms": 1496.4735680000558,
+      "input_tokens": 2454,
+      "output_tokens": 187,
+      "cost_usd": 0.0012808,
+      "judge_cost_usd": 0.003894,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "pipe-003",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "PipeDream saves communication overhead by reducing it by up to 95% compared to data-parallel training (BSP), which significantly cuts down training time. For example, for VGG16 with 8 machines on Cluster-A, PipeDream eliminates 95% of the communication overhead compared to BSP, improving performance by 7.04\u00d7 over single machine training and 2.99\u00d7 over BSP. Similarly, for the S2VT model, PipeDream reduces communication overhead by 95% compared to BSP, slashing training time by 3.34\u00d7 compared to single machine training (3.01\u00d7 compared to BSP).",
+      "cited_chunk_ids": [
+        "pipedream2018:14-5-2-pipedream-vs-data-parallelism:004",
+        "pipedream2018:14-5-2-pipedream-vs-data-parallelism:001",
+        "pipedream2018:14-5-2-pipedream-vs-data-parallelism:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "PipeDream saves communication overhead by reducing it by up to 95% compared to data-parallel training (BSP), which significantly cuts down training time.",
+          "supported": true,
+          "reason": "Table 1 and passages state PipeDream reduces communication overhead by up to 95% compared to BSP and improves training speed significantly."
+        },
+        {
+          "claim": "For VGG16 with 8 machines on Cluster-A, PipeDream eliminates 95% of the communication overhead compared to BSP, improving performance by 7.04\u00d7 over single machine training and 2.99\u00d7 over BSP.",
+          "supported": true,
+          "reason": "Directly stated in both Table 1 and passage [2]."
+        },
+        {
+          "claim": "For the S2VT model, PipeDream reduces communication overhead by 95% compared to BSP, slashing training time by 3.34\u00d7 compared to single machine training (3.01\u00d7 compared to BSP).",
+          "supported": true,
+          "reason": "Directly stated in passage [1] and Table 1."
+        }
+      ],
+      "latency_ms": 2184.0919150000673,
+      "input_tokens": 2136,
+      "output_tokens": 333,
+      "cost_usd": 0.0013872000000000003,
+      "judge_cost_usd": 0.005036,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "pipe-004",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Weight stashing in PipeDream is a technique that maintains multiple versions of the weights, one for each active minibatch. It ensures that within a stage, the same version of model parameters is used for both the forward and backward pass of a given minibatch, preventing discrepancies that can hinder model convergence. This is done by storing the weights used during the forward pass as part of the intermediate state for that minibatch and using the same weights during the backward pass. Weight stashing is critical for meaningful learning and avoids the inconsistency of using different weight versions within a stage for the same minibatch.",
+      "cited_chunk_ids": [
+        "pipedream2018:09-3-4-e-ective-learning:000",
+        "pipedream2018:09-3-4-e-ective-learning:001",
+        "pipedream2018:09-3-4-e-ective-learning:002",
+        "pipedream2bw2021:03-2-background:002"
+      ],
+      "citation_precision": 0.5,
+      "citation_precision_page": 0.75,
+      "citation_hit": true,
+      "wrong_paper_citation": true,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Weight stashing in PipeDream is a technique that maintains multiple versions of the weights, one for each active minibatch.",
+          "supported": true,
+          "reason": "Directly stated in passages [1] and [4]."
+        },
+        {
+          "claim": "It ensures that within a stage, the same version of model parameters is used for both the forward and backward pass of a given minibatch, preventing discrepancies that can hinder model convergence.",
+          "supported": true,
+          "reason": "Passages [1] and [2] explicitly say weight stashing ensures same weights are used within a stage for forward and backward pass and discuss discrepancy/convergence issues if not."
+        },
+        {
+          "claim": "This is done by storing the weights used during the forward pass as part of the intermediate state for that minibatch and using the same weights during the backward pass.",
+          "supported": true,
+          "reason": "Described directly in passage [1]."
+        },
+        {
+          "claim": "Weight stashing is critical for meaningful learning and avoids the inconsistency of using different weight versions within a stage for the same minibatch.",
+          "supported": true,
+          "reason": "Passage [3] states weight stashing is critical for meaningful learning and discusses the avoidance of inconsistent use of weights within a stage."
+        }
+      ],
+      "latency_ms": 2690.8887520000917,
+      "input_tokens": 2628,
+      "output_tokens": 380,
+      "cost_usd": 0.0016592,
+      "judge_cost_usd": 0.005986,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "pipe-005",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "PipeDream-2BW needs to keep at most 2 weight versions at every worker.",
+      "cited_chunk_ids": [
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:000",
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:001",
+        "pipedream2bw2021:23-a-1-2-memory-cost-function:000"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.6666666666666666,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "PipeDream-2BW needs to keep at most 2 weight versions at every worker.",
+          "supported": true,
+          "reason": "Passages 1 and 2 both state that at most 2 weight versions are maintained at a time."
+        }
+      ],
+      "latency_ms": 1030.9262859999535,
+      "input_tokens": 2474,
+      "output_tokens": 89,
+      "cost_usd": 0.001132,
+      "judge_cost_usd": 0.003364,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "pipe-006",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Megatron-LM's interleaved pipeline schedule reduces the pipeline bubble size by a factor of v (the number of model chunks per device), which means the pipeline flush happens sooner, improving computational performance. However, this gain comes with increased communication overhead, as the amount of communication also increases by v. The schedule requires the number of microbatches in a batch to be an integer multiple of the pipeline parallelism degree. This schedule adapts the memory-efficient 1F1B schedule and reduces bubble time fraction by 1/v times (p-1)/m, where p is pipeline stages and m is microbatches per batch.",
+      "cited_chunk_ids": [
+        "megatron2021:19-5-3-pipeline-parallelism:002"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 0.0,
+      "judged_claims": [
+        {
+          "claim": "Megatron-LM's interleaved pipeline schedule reduces the pipeline bubble size by a factor of v (the number of model chunks per device), which means the pipeline flush happens sooner, improving computational performance.",
+          "supported": false,
+          "reason": "The passage states the interleaved schedule improves computational performance and mentions bubble size behavior, but it does not reference a reduction by a factor of v or the notion of pipeline flush happening sooner due to this factor."
+        },
+        {
+          "claim": "This gain comes with increased communication overhead, as the amount of communication also increases by v.",
+          "supported": false,
+          "reason": "The passage says the interleaved schedule features more communication per sample, but it does not specify that the increase is by a factor of v."
+        },
+        {
+          "claim": "The schedule requires the number of microbatches in a batch to be an integer multiple of the pipeline parallelism degree.",
+          "supported": false,
+          "reason": "The passage does not say anything about requirements on the number of microbatches needing to be a multiple of the pipeline parallelism degree."
+        },
+        {
+          "claim": "This schedule adapts the memory-efficient 1F1B schedule and reduces bubble time fraction by 1/v times (p-1)/m, where p is pipeline stages and m is microbatches per batch.",
+          "supported": false,
+          "reason": "The passage does not mention the 1F1B schedule or provide the formula for bubble time fraction reduction."
+        }
+      ],
+      "latency_ms": 2278.816139000014,
+      "input_tokens": 2551,
+      "output_tokens": 323,
+      "cost_usd": 0.0015372000000000003,
+      "judge_cost_usd": 0.003406,
+      "dropped_citations": 2,
+      "dropped_quotes": [
+        "we developed an interleaved schedule that adapts the memory-efficient 1F1B schedule from before...the pipeline flush for the same batch size happens sooner in the new schedule.",
+        "the pipeline bubble time thus reduces to t_int.p_b = (p-1)\u00b7(t_f + t_b)/v, and the bubble time fraction is then: Bubble time fraction = 1/v\u00b7(p-1)/m. This means that the new schedule reduces the bubble "
+      ],
+      "error": null
+    },
+    {
+      "id": "pipe-007",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Megatron-LM (2021) reached a peak read bandwidth of 1TB/s for loading checkpoints of a trillion-parameter model on 3072 GPUs, but the exact training throughput in terms of TFLOPS or tokens per second is not explicitly stated in the sources. The checkpoint size was 13.8 terabytes and the system achieved 40% of peak write bandwidth (273 GB/s) for saving checkpoints.",
+      "cited_chunk_ids": [
+        "megatron2021:26-5-10-checkpoint-loading-and-saving:000",
+        "megatron2021:26-5-10-checkpoint-loading-and-saving:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Megatron-LM (2021) reached a peak read bandwidth of 1TB/s for loading checkpoints of a trillion-parameter model on 3072 GPUs.",
+          "supported": true,
+          "reason": "This is explicitly stated in the passages."
+        },
+        {
+          "claim": "The exact training throughput in terms of TFLOPS or tokens per second is not explicitly stated in the sources.",
+          "supported": true,
+          "reason": "The passages do not provide training throughput in terms of TFLOPS or tokens per second."
+        },
+        {
+          "claim": "The checkpoint size was 13.8 terabytes.",
+          "supported": true,
+          "reason": "This is explicitly stated in the passages."
+        },
+        {
+          "claim": "The system achieved 40% of peak write bandwidth (273 GB/s) for saving checkpoints.",
+          "supported": true,
+          "reason": "This is explicitly stated in the passages."
+        }
+      ],
+      "latency_ms": 1679.5311769999444,
+      "input_tokens": 1981,
+      "output_tokens": 170,
+      "cost_usd": 0.0010644,
+      "judge_cost_usd": 0.002498,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "pipe-008",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": true,
+      "refusal_reason": "The model drafted an answer but none of its citations could be verified against the retrieved passages, so it was withheld.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 916.0194049999291,
+      "input_tokens": 1989,
+      "output_tokens": 79,
+      "cost_usd": 0.000922,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "In general, we checkpoint the input activation for each transformer block, requiring one all-gather per transformer block."
+      ],
+      "error": null
+    },
+    {
+      "id": "mp-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": true,
+      "refusal_reason": "The model drafted an answer but none of its citations could be verified against the retrieved passages, so it was withheld.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 1385.3654600000027,
+      "input_tokens": 2299,
+      "output_tokens": 144,
+      "cost_usd": 0.00115,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "This approach splits both GEMMs in the MLP block across GPUs and requires only a single all-reduce operation in the forward pass (g operator) and a single all-reduce in the backward pass (f operator)."
+      ],
+      "error": null
+    },
+    {
+      "id": "mp-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Megatron-LM splits the first MLP GEMM by columns to allow the GeLU nonlinearity to be independently applied to the output of each partitioned GEMM, which removes a synchronization point that would be required if the weight matrix were split by rows. This approach enables better scaling and requires only a single all-reduce operation in the forward pass and one in the backward pass.",
+      "cited_chunk_ids": [
+        "megatron2019:06-3-model-parallel-transformers:000",
+        "megatron2021:06-2-3-tensor-model-parallelism:000",
+        "megatron2019:06-3-model-parallel-transformers:000"
+      ],
+      "citation_precision": 0.6666666666666666,
+      "citation_precision_page": 0.6666666666666666,
+      "citation_hit": true,
+      "wrong_paper_citation": true,
+      "faithfulness": 0.75,
+      "judged_claims": [
+        {
+          "claim": "Megatron-LM splits the first MLP GEMM by columns to allow the GeLU nonlinearity to be independently applied to the output of each partitioned GEMM.",
+          "supported": true,
+          "reason": "Directly stated in passages 1, 2, and 3."
+        },
+        {
+          "claim": "This removes a synchronization point that would be required if the weight matrix were split by rows.",
+          "supported": true,
+          "reason": "Passages 1, 2, and 3 describe this exact reason for the column split."
+        },
+        {
+          "claim": "This approach enables better scaling.",
+          "supported": false,
+          "reason": "No passage explicitly states that this approach enables better scaling."
+        },
+        {
+          "claim": "This approach requires only a single all-reduce operation in the forward pass and one in the backward pass.",
+          "supported": true,
+          "reason": "Expressly stated in passages 1 and 3 for the MLP."
+        }
+      ],
+      "latency_ms": 2345.495358999983,
+      "input_tokens": 2502,
+      "output_tokens": 317,
+      "cost_usd": 0.001508,
+      "judge_cost_usd": 0.004956,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "mp-003",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Megatron-LM (2019) achieved 74% scaling efficiency relative to linear scaling on 512 GPUs for the largest configuration (8.3 billion parameters) using model+data parallelism.",
+      "cited_chunk_ids": [
+        "megatron2019:12-5-1-1-model-and-data-parallelism:001"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Megatron-LM (2019) achieved 74% scaling efficiency relative to linear scaling on 512 GPUs for the largest configuration (8.3 billion parameters) using model+data parallelism.",
+          "supported": true,
+          "reason": "The passage directly states they achieved 74% scaling relative to linear scaling on 512 GPUs for 8.3 billion parameter configuration using model+data parallelism."
+        }
+      ],
+      "latency_ms": 1108.7569799999528,
+      "input_tokens": 2118,
+      "output_tokens": 102,
+      "cost_usd": 0.0010104,
+      "judge_cost_usd": 0.001498,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "fsdp-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "When the sharding factor is set to 1, FSDP fully replicates the model and simplifies to vanilla data parallelism that uses AllReduce for gradient reduction.",
+      "cited_chunk_ids": [
+        "fsdp2023:09-3-2-sharding-strategies:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "When the sharding factor is set to 1, FSDP fully replicates the model and simplifies to vanilla data parallelism that uses AllReduce for gradient reduction.",
+          "supported": true,
+          "reason": "The passage states: 'By setting the sharding factor to 1, FSDP fully replicates the model and simplifies to vanilla data parallelism that uses AllReduce for gradient reduction.'"
+        }
+      ],
+      "latency_ms": 1056.9944960000157,
+      "input_tokens": 2905,
+      "output_tokens": 87,
+      "cost_usd": 0.0013012,
+      "judge_cost_usd": 0.002104,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "fsdp-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "FSDP was co-designed with several key PyTorch core components including Tensor implementation, dispatcher system, and CUDA memory caching allocator.",
+      "cited_chunk_ids": [
+        "fsdp2023:01-abstract:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "FSDP was co-designed with several key PyTorch core components including Tensor implementation, dispatcher system, and CUDA memory caching allocator.",
+          "supported": true,
+          "reason": "The passage states that FSDP has been closely co-designed with these PyTorch components."
+        }
+      ],
+      "latency_ms": 908.9125039999999,
+      "input_tokens": 2062,
+      "output_tokens": 73,
+      "cost_usd": 0.0009416000000000001,
+      "judge_cost_usd": 0.001934,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "prec-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Mixed precision training keeps a single-precision (FP32) master copy of the weights, which is updated with the weight gradients during the optimizer step. This FP32 master copy is used to overcome the limitations of FP16 in representing small updates and large ratio of weight value to weight update, ensuring accuracy is maintained.",
+      "cited_chunk_ids": [
+        "mixed-precision2018:05-3-1-fp32-master-copy-of-weights:000",
+        "mixed-precision2018:05-3-1-fp32-master-copy-of-weights:000",
+        "mixed-precision2018:05-3-1-fp32-master-copy-of-weights:001"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Mixed precision training keeps a single-precision (FP32) master copy of the weights.",
+          "supported": true,
+          "reason": "The passages state that an FP32 master copy of the weights is maintained in mixed precision training."
+        },
+        {
+          "claim": "The FP32 master copy is updated with the weight gradients during the optimizer step.",
+          "supported": true,
+          "reason": "The passages explicitly state that the FP32 master copy is updated with the weight gradient during the optimizer step."
+        },
+        {
+          "claim": "The FP32 master copy is used to overcome the limitations of FP16 in representing small updates and large ratio of weight value to weight update, ensuring accuracy is maintained.",
+          "supported": true,
+          "reason": "The passages detail that the FP32 master copy allows overcoming the problem of small updates becoming zero in FP16 and large ratios causing update loss, thereby recovering accuracy."
+        }
+      ],
+      "latency_ms": 1511.1643430000186,
+      "input_tokens": 1875,
+      "output_tokens": 159,
+      "cost_usd": 0.0010044,
+      "judge_cost_usd": 0.004142,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "prec-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "A loss-scaling factor of 8 was sufficient for the Multibox SSD network to match the accuracy achieved with FP32 training.",
+      "cited_chunk_ids": [
+        "mixed-precision2018:06-3-2-loss-scaling:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "A loss-scaling factor of 8 was sufficient for the Multibox SSD network to match the accuracy achieved with FP32 training.",
+          "supported": true,
+          "reason": "The passage states that scaling gradients by a factor of 8 is sufficient to match the accuracy obtained with FP32 training for this network."
+        }
+      ],
+      "latency_ms": 872.0810040000515,
+      "input_tokens": 2167,
+      "output_tokens": 88,
+      "cost_usd": 0.0010076000000000002,
+      "judge_cost_usd": 0.001878,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "prec-003",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": true,
+      "refusal_reason": "The model drafted an answer but none of its citations could be verified against the retrieved passages, so it was withheld.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 2028.9265390000537,
+      "input_tokens": 2938,
+      "output_tokens": 274,
+      "cost_usd": 0.0016136000000000002,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 2,
+      "dropped_quotes": [
+        "ActNN compresses activation memory by 12\u00d7. This matches the theoretical value. Take a Conv-BN-ReLU block as example, FP takes 32 bits (Conv) + 32 bits (BN) = 64 bits, while ActNN takes 2.125 bits (Con",
+        "ActNN's layers can be easily plugged into existing deep learning frameworks without modifying the frameworks themselves. The layers are fully compatible with existing features of PyTorch, such as dyna"
+      ],
+      "error": null
+    },
+    {
+      "id": "prec-004",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Block-wise quantization in 8-bit optimizers splits input tensors into smaller blocks and performs quantization independently on each block. This reduces the effect of outliers by isolating them to particular blocks, improving stability and performance, especially for large-scale models. It also allows high optimizer throughput since each block's normalization can be computed independently in each core, avoiding slow cross-core synchronization. The process involves chunking the optimizer state tensor into blocks, normalizing by the absolute maximum value of each block, performing dynamic quantization, and storing the index values for efficient dequantization later by lookup and denormalization with the block-wise absolute maximum value.",
+      "cited_chunk_ids": [
+        "8bit-optim2022:01-abstract:002",
+        "8bit-optim2022:01-abstract:003",
+        "8bit-optim2022:01-abstract:000"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.6666666666666666,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Block-wise quantization in 8-bit optimizers splits input tensors into smaller blocks and performs quantization independently on each block.",
+          "supported": true,
+          "reason": "Stated in multiple passages ([1],[2],[3]) that block-wise quantization divides tensors into blocks and quantizes each block independently."
+        },
+        {
+          "claim": "This reduces the effect of outliers by isolating them to particular blocks, improving stability and performance, especially for large-scale models.",
+          "supported": true,
+          "reason": "Passage [2] states that outliers are isolated to blocks and this improves stability and performance, particularly for large-scale models."
+        },
+        {
+          "claim": "It also allows high optimizer throughput since each block's normalization can be computed independently in each core, avoiding slow cross-core synchronization.",
+          "supported": true,
+          "reason": "Passage [2] explains that normalization can be done independently in each core, allowing high throughput and avoiding cross-core synchronization."
+        },
+        {
+          "claim": "The process involves chunking the optimizer state tensor into blocks, normalizing by the absolute maximum value of each block, performing dynamic quantization, and storing the index values for efficient dequantization later by lookup and denormalization with the block-wise absolute maximum value.",
+          "supported": true,
+          "reason": "Passage [1] describes exactly this process in detail, confirming each step."
+        }
+      ],
+      "latency_ms": 2466.090783000027,
+      "input_tokens": 2183,
+      "output_tokens": 363,
+      "cost_usd": 0.001454,
+      "judge_cost_usd": 0.005634,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "flash-001",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "FlashAttention uses tiling to reduce the number of memory reads and writes between GPU high bandwidth memory (HBM) and GPU on-chip SRAM, thereby reducing memory accesses and avoiding the materialization of the large attention matrix on slower GPU HBM.",
+      "cited_chunk_ids": [
+        "flashattention2022:00-front-matter:000",
+        "flashattention2022:01-1-introduction:001"
+      ],
+      "citation_precision": 0.5,
+      "citation_precision_page": 0.5,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "FlashAttention uses tiling to reduce the number of memory reads and writes between GPU high bandwidth memory (HBM) and GPU on-chip SRAM.",
+          "supported": true,
+          "reason": "This is explicitly stated in both passages."
+        },
+        {
+          "claim": "FlashAttention reduces memory accesses.",
+          "supported": true,
+          "reason": "Both passages mention FlashAttention does fewer memory accesses than standard attention."
+        },
+        {
+          "claim": "FlashAttention avoids the materialization of the large attention matrix on slower GPU HBM.",
+          "supported": true,
+          "reason": "Both passages mention that FlashAttention avoids materializing the large N x N attention matrix on HBM."
+        }
+      ],
+      "latency_ms": 1475.3791370000044,
+      "input_tokens": 3482,
+      "output_tokens": 152,
+      "cost_usd": 0.0016360000000000003,
+      "judge_cost_usd": 0.003436,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "flash-002",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "FlashAttention reports a 15% faster training speed on BERT-large compared to the Nvidia MLPerf 1.1 implementation, reducing training time from 20.0 to 17.4 minutes on 8\u00d7A100 GPUs. For GPT-2, FlashAttention achieves up to 3\u00d7 speedup over HuggingFace and 1.7\u00d7 speedup over Megatron-LM implementations on 8\u00d7A100 GPUs, with training times for GPT-2 small reduced from 9.5 days (HuggingFace) to 2.7 days (FlashAttention) and for GPT-2 medium from 21.0 days (HuggingFace) to 6.9 days (FlashAttention).",
+      "cited_chunk_ids": [
+        "flashattention2022:10-4-1-faster-models-with-flashattention:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "FlashAttention reports a 15% faster training speed on BERT-large compared to the Nvidia MLPerf 1.1 implementation.",
+          "supported": true,
+          "reason": "The passage says \"Our implementation is 15% faster.\""
+        },
+        {
+          "claim": "FlashAttention reduces BERT-large training time from 20.0 to 17.4 minutes on 8\u00d7A100 GPUs compared to the Nvidia MLPerf 1.1 implementation.",
+          "supported": true,
+          "reason": "The passage lists training times: Nvidia MLPerf 20.0 minutes, FlashAttention 17.4 minutes, both on 8\u00d7A100 GPUs."
+        },
+        {
+          "claim": "For GPT-2, FlashAttention achieves up to 3\u00d7 speedup over HuggingFace and 1.7\u00d7 speedup over Megatron-LM implementations on 8\u00d7A100 GPUs.",
+          "supported": true,
+          "reason": "The passage says \"up to 3\u00d7 ... compared to Huggingface and 1.7\u00d7 ... compared to Megatron-LM\" for GPT-2 on 8\u00d7A100 GPUs."
+        },
+        {
+          "claim": "Training times for GPT-2 small are reduced from 9.5 days (HuggingFace) to 2.7 days (FlashAttention).",
+          "supported": true,
+          "reason": "Table gives Huggingface: 9.5 days; FlashAttention: 2.7 days for GPT-2 small."
+        },
+        {
+          "claim": "Training times for GPT-2 medium are reduced from 21.0 days (HuggingFace) to 6.9 days (FlashAttention).",
+          "supported": true,
+          "reason": "Table gives Huggingface: 21.0 days; FlashAttention: 6.9 days for GPT-2 medium."
+        }
+      ],
+      "latency_ms": 2174.9139510000077,
+      "input_tokens": 3004,
+      "output_tokens": 297,
+      "cost_usd": 0.0016768000000000002,
+      "judge_cost_usd": 0.004738,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "Our implementation is 15% faster. Table 1 compares our training time to the implementation from Nvidia that set the training speed record for MLPerf 1.1 [58]. Our implementation is 15% faster."
+      ],
+      "error": null
+    },
+    {
+      "id": "remat-017",
+      "kind": "factual",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Sequence parallelism and selective recomputation in Korthikanti et al. achieve significant memory savings and reduce the overhead of activation recomputation during training. Sequence parallelism reduces memory usage and provides a modest speedup in execution time, while selective recomputation reduces the recomputation overhead in the backward pass. Together, they reduce activation memory by about 5\u00d7 and reduce execution time overhead from recomputation by over 90%, with overhead dropping to just 4% when combined. This enables faster training of large transformer models with less redundant compute.",
+      "cited_chunk_ids": [
+        "korthikanti2022-selective:00-front-matter:000",
+        "korthikanti2022-selective:14-6-2-execution-time-per-layer:001",
+        "korthikanti2022-selective:16-7-conclusions-and-future-work:000"
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_precision_page": 0.3333333333333333,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Sequence parallelism and selective recomputation in Korthikanti et al. achieve significant memory savings and reduce the overhead of activation recomputation during training.",
+          "supported": true,
+          "reason": "Passages state that these techniques reduce memory and recomputation overhead."
+        },
+        {
+          "claim": "Sequence parallelism reduces memory usage and provides a modest speedup in execution time.",
+          "supported": true,
+          "reason": "Passage [3] states sequence parallelism reduces required activation memory and [1] reports improvements in Model Flops Utilization (speed)."
+        },
+        {
+          "claim": "Selective recomputation reduces the recomputation overhead in the backward pass.",
+          "supported": true,
+          "reason": "Passage [2] explicitly says selective recomputation reduces backward pass overhead."
+        },
+        {
+          "claim": "Together, they reduce activation memory by about 5\u00d7 and reduce execution time overhead from recomputation by over 90%, with overhead dropping to just 4% when combined.",
+          "supported": true,
+          "reason": "These numbers are directly reported in passages [1]-[3]."
+        },
+        {
+          "claim": "This enables faster training of large transformer models with less redundant compute.",
+          "supported": true,
+          "reason": "Passages report faster training and less redundant compute as a result of these methods."
+        }
+      ],
+      "latency_ms": 2213.3541330000526,
+      "input_tokens": 1931,
+      "output_tokens": 337,
+      "cost_usd": 0.0013116000000000002,
+      "judge_cost_usd": 0.004166,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "sequence parallelism provides a modest improvement to the time it takes to complete one transformer layer, reducing the forward time from 7.7ms to 7.2ms, a 6% speedup."
+      ],
+      "error": null
+    },
+    {
+      "id": "cross-007",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "According to PyTorch FSDP, fully sharding parameters incurs about 1.5x communication overhead and volume compared with ordinary data parallelism (DDP) when using a bandwidth optimal ring algorithm.",
+      "cited_chunk_ids": [
+        "fsdp2023:09-3-2-sharding-strategies:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "According to PyTorch FSDP, fully sharding parameters incurs about 1.5x communication overhead and volume compared with ordinary data parallelism (DDP) when using a bandwidth optimal ring algorithm.",
+          "supported": true,
+          "reason": "The passage states that full sharding has 1.5x communication overhead and volume over DDP if using bandwidth optimal ring algorithm."
+        }
+      ],
+      "latency_ms": 970.0292549999858,
+      "input_tokens": 2727,
+      "output_tokens": 84,
+      "cost_usd": 0.0012252,
+      "judge_cost_usd": 0.002086,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-008",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Megatron-LM (2021) keeps weights consistent across forward and backward passes by using a double-buffered weight update scheme (2BW) that stashes only two weight versions per worker, reducing memory footprint and avoiding pipeline stalls. In contrast, PipeDream uses weight stashing to maintain multiple versions of weights, one for each active minibatch, ensuring the same version is used for forward and backward passes within a stage, but this can require stashing up to the pipeline depth number of versions. PipeDream also uses vertical sync to coordinate weight versions across stages, which Megatron-LM's 2BW scheme does not describe. Thus, Megatron-LM's approach is more memory efficient and simpler in weight version management compared to PipeDream's multiple weight version stashing and vertical sync coordination.",
+      "cited_chunk_ids": [
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:002",
+        "pipedream2018:09-3-4-e-ective-learning:001",
+        "pipedream2bw2021:03-2-background:002",
+        "pipedream2018:09-3-4-e-ective-learning:001"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.5,
+      "citation_hit": false,
+      "wrong_paper_citation": true,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Megatron-LM (2021) keeps weights consistent across forward and backward passes by using a double-buffered weight update scheme (2BW) that stashes only two weight versions per worker, reducing memory footprint and avoiding pipeline stalls.",
+          "supported": true,
+          "reason": "Passage [1] directly states that PipeDream-2BW only stashes two weight versions at every worker, reducing total memory footprint while no longer requiring expensive pipeline stalls."
+        },
+        {
+          "claim": "PipeDream uses weight stashing to maintain multiple versions of weights, one for each active minibatch, ensuring the same version is used for forward and backward passes within a stage, but this can require stashing up to the pipeline depth number of versions.",
+          "supported": true,
+          "reason": "Passage [3] states that PipeDream maintains multiple weight versions and stashes up to the pipeline depth d in the worst case, ensuring weight version consistency within a stage."
+        },
+        {
+          "claim": "PipeDream also uses vertical sync to coordinate weight versions across stages, which Megatron-LM's 2BW scheme does not describe.",
+          "supported": true,
+          "reason": "Passages [2] and [4] describe PipeDream's vertical sync for cross-stage consistency; there is no mention of this in 2BW/ Megatron-LM in the passages."
+        },
+        {
+          "claim": "Megatron-LM's approach is more memory efficient and simpler in weight version management compared to PipeDream's multiple weight version stashing and vertical sync coordination.",
+          "supported": true,
+          "reason": "Passages [1] and [3] show that 2BW only stashes two versions and avoids flushes/stalls, while PipeDream requires stashing up to d versions with extra coordination, implying greater memory efficiency and simplicity for 2BW."
+        }
+      ],
+      "latency_ms": 2271.5930170001,
+      "input_tokens": 2737,
+      "output_tokens": 332,
+      "cost_usd": 0.001626,
+      "judge_cost_usd": 0.00718,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-009",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "PipeDream-2BW keeps at most 2 weight versions at every worker, whereas PipeDream's weight stashing scheme maintains d weight versions in the worst case, where d is the pipeline depth.",
+      "cited_chunk_ids": [
+        "pipedream2bw2021:05-3-1-double-buffered-weight-updates-2bw:000",
+        "pipedream2bw2021:03-2-background:002"
+      ],
+      "citation_precision": 0.5,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "PipeDream-2BW keeps at most 2 weight versions at every worker.",
+          "supported": true,
+          "reason": "Passage [1] states that the total number of weight versions that need to be maintained is at most 2."
+        },
+        {
+          "claim": "PipeDream's weight stashing scheme maintains d weight versions in the worst case, where d is the pipeline depth.",
+          "supported": true,
+          "reason": "Passage [2] directly states that the total number of weight versions stashed is d in the worst case, where d is the pipeline depth."
+        }
+      ],
+      "latency_ms": 1361.5077289999817,
+      "input_tokens": 2745,
+      "output_tokens": 138,
+      "cost_usd": 0.0013188,
+      "judge_cost_usd": 0.003092,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-010",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Offload uses CPU memory beyond the GPU memory, storing gradients and optimizer states there while keeping parameters in GPU memory. ZeRO-Infinity uses both CPU memory and NVMe storage beyond GPU memory, offloading all partitioned model states to CPU or NVMe memory and activations to CPU memory when necessary.",
+      "cited_chunk_ids": [
+        "zero-infinity2021:09-5-1-design-for-unprecedented-scale:000",
+        "zero-infinity2021:03-2-background-and-related-work:001"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Offload uses CPU memory beyond the GPU memory, storing gradients and optimizer states there while keeping parameters in GPU memory.",
+          "supported": true,
+          "reason": "Passage [2] directly states that ZeRO-Offload stores the gradients and optimizer states in CPU memory and keeps parameters in GPU memory."
+        },
+        {
+          "claim": "ZeRO-Infinity uses both CPU memory and NVMe storage beyond GPU memory, offloading all partitioned model states to CPU or NVMe memory and activations to CPU memory when necessary.",
+          "supported": true,
+          "reason": "Passage [1] states that ZeRO-Infinity can offload all partitioned model states to CPU or NVMe memory and activations to CPU memory as needed."
+        }
+      ],
+      "latency_ms": 1784.2130730000463,
+      "input_tokens": 2582,
+      "output_tokens": 226,
+      "cost_usd": 0.0013944,
+      "judge_cost_usd": 0.003522,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "ZeRO-Infinity is built on top of ZeRO-3 which partitions all model states to remove memory redundancy... ZeRO-Infinity is designed with a powerful offload mechanism called the infinity offload engine "
+      ],
+      "error": null
+    },
+    {
+      "id": "cross-011",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "Megatron-LM (2021) checkpoints activations at transformer layer boundaries and recomputes the rest during backward pass, a method called full activation recomputation. Korthikanti et al. propose instead selective activation recomputation, where only parts of each transformer layer that consume considerable memory but are cheap to recompute (like attention operations) are checkpointed and recomputed, reducing redundant compute and memory overhead.",
+      "cited_chunk_ids": [
+        "korthikanti2022-selective:01-1-introduction:001",
+        "korthikanti2022-selective:11-5-selective-activation-recomputation:001"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.5,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "Megatron-LM (2021) checkpoints activations at transformer layer boundaries and recomputes the rest during backward pass, a method called full activation recomputation.",
+          "supported": true,
+          "reason": "Passage [1] describes full activation recomputation as checkpointing activations at transformer layer boundaries and recomputing the rest."
+        },
+        {
+          "claim": "Korthikanti et al. propose instead selective activation recomputation, where only parts of each transformer layer that consume considerable memory but are cheap to recompute (like attention operations) are checkpointed and recomputed.",
+          "supported": true,
+          "reason": "Passage [2] explicitly describes selective activation recomputation, focusing on parts like attention operations."
+        },
+        {
+          "claim": "This selective activation recomputation reduces redundant compute and memory overhead.",
+          "supported": true,
+          "reason": "Passage [2] indicates the benefit of selective checkpointing is reduced unnecessary compute and better memory usage."
+        }
+      ],
+      "latency_ms": 1748.7156939999977,
+      "input_tokens": 2639,
+      "output_tokens": 212,
+      "cost_usd": 0.0013948,
+      "judge_cost_usd": 0.003766,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-012",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "GPipe uses re-materialization inside a pipeline-parallel library, storing only activations at partition boundaries. During forward computation, each accelerator only stores output activations at the partition boundaries and recomputes the forward function during the backward pass, reducing peak activation memory requirements.",
+      "cited_chunk_ids": [
+        "gpipe2019:06-2-3-performance-optimization:000"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "GPipe uses re-materialization inside a pipeline-parallel library.",
+          "supported": true,
+          "reason": "The passage states GPipe supports re-materialization and discusses pipeline parallelism."
+        },
+        {
+          "claim": "GPipe stores only activations at partition boundaries.",
+          "supported": true,
+          "reason": "The passage says only output activations at partition boundaries are stored during forward computation."
+        },
+        {
+          "claim": "During forward computation, each accelerator only stores output activations at the partition boundaries.",
+          "supported": true,
+          "reason": "Directly stated in the passage."
+        },
+        {
+          "claim": "During the backward pass, each accelerator recomputes the forward function, reducing peak activation memory requirements.",
+          "supported": true,
+          "reason": "The passage states during the backward pass, the accelerator recomputes the forward function and this reduces peak activation memory requirements."
+        }
+      ],
+      "latency_ms": 1121.9865580000032,
+      "input_tokens": 2509,
+      "output_tokens": 126,
+      "cost_usd": 0.0012052,
+      "judge_cost_usd": 0.002536,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-013",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "The method that reduces activation memory by storing quantized activations rather than recomputing them is ActNN, which compresses saved tensors (activations) using quantization strategies for better compression instead of recomputing them. This is distinct from activation recomputation methods that trade computation for memory by dropping activations and recomputing them later.",
+      "cited_chunk_ids": [
+        "actnn2021:02-2-related-works:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "ActNN reduces activation memory by storing quantized activations rather than recomputing them.",
+          "supported": true,
+          "reason": "The passage states that ActNN compresses saved tensors (activations) using quantization strategies for better compression instead of recomputing them."
+        },
+        {
+          "claim": "ActNN's approach is distinct from activation recomputation methods that trade computation for memory by dropping activations and recomputing them later.",
+          "supported": true,
+          "reason": "The passage contrasts ActNN with gradient checkpointing (recomputation), noting that ActNN compresses saved tensors instead of trading computation for memory via dropping and recomputing activations."
+        }
+      ],
+      "latency_ms": 1263.4886499999993,
+      "input_tokens": 2305,
+      "output_tokens": 106,
+      "cost_usd": 0.0010915999999999999,
+      "judge_cost_usd": 0.002446,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-014",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "8-bit optimizers make the optimizer states low-precision (8-bit), while mixed precision training keeps an FP32 master copy of the weights and FP32 copies of other optimizer states like momentum and variance for updates. Mixed precision stores weights, activations, and gradients in FP16 but maintains FP32 master weights to avoid accuracy loss due to small gradient updates becoming zero in FP16.",
+      "cited_chunk_ids": [
+        "mixed-precision2018:05-3-1-fp32-master-copy-of-weights:000",
+        "zero2020:10-3-1-model-states-optimizer-states-gradie:000"
+      ],
+      "citation_precision": 0.0,
+      "citation_precision_page": 0.0,
+      "citation_hit": false,
+      "wrong_paper_citation": true,
+      "faithfulness": 0.75,
+      "judged_claims": [
+        {
+          "claim": "8-bit optimizers make the optimizer states low-precision (8-bit).",
+          "supported": false,
+          "reason": "Neither passage mentions 8-bit optimizers or describes optimizer states in 8-bit precision."
+        },
+        {
+          "claim": "Mixed precision training keeps an FP32 master copy of the weights and FP32 copies of other optimizer states like momentum and variance for updates.",
+          "supported": true,
+          "reason": "Passage [2] directly states FP32 copies of parameters, momentum, and variance are kept during mixed precision training."
+        },
+        {
+          "claim": "Mixed precision stores weights, activations, and gradients in FP16.",
+          "supported": true,
+          "reason": "Both passages [1] and [2] state that weights, activations, and gradients are stored as FP16 in mixed precision training."
+        },
+        {
+          "claim": "Mixed precision maintains FP32 master weights to avoid accuracy loss due to small gradient updates becoming zero in FP16.",
+          "supported": true,
+          "reason": "Passage [1] explains that FP32 master weights are kept to recover accuracy lost due to small gradient updates becoming zero in FP16."
+        }
+      ],
+      "latency_ms": 1701.7092160000402,
+      "input_tokens": 2002,
+      "output_tokens": 219,
+      "cost_usd": 0.0011512,
+      "judge_cost_usd": 0.003928,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "cross-015",
+      "kind": "cross_paper",
+      "should_refuse": false,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "FlashAttention avoids storing the attention matrix for the backward pass by recomputing the attention matrix and related statistics from blocks of Q, K, V in SRAM during the backward pass, thus not storing O(N\u00b2) intermediate values (source 5). The approach in \"Reducing Activation Recomputation in Large Transformer Models\" selectively recomputes only parts of each transformer layer, specifically the attention operations after the Q, K, V linear layers, which have large activations but low FLOPs per input element (source 2).",
+      "cited_chunk_ids": [
+        "flashattention2022:06-3-1-an-e-cient-attention-algorithm-with-:001",
+        "korthikanti2022-selective:11-5-selective-activation-recomputation:001"
+      ],
+      "citation_precision": 1.0,
+      "citation_precision_page": 1.0,
+      "citation_hit": true,
+      "wrong_paper_citation": false,
+      "faithfulness": 1.0,
+      "judged_claims": [
+        {
+          "claim": "FlashAttention avoids storing the attention matrix for the backward pass by recomputing the attention matrix and related statistics from blocks of Q, K, V in SRAM during the backward pass, thus not storing O(N\u00b2) intermediate values.",
+          "supported": true,
+          "reason": "Passage [1] explains that, by storing only the output and softmax normalization statistics, the attention matrices S and P can be recomputed easily in the backward pass from blocks of Q, K, V, thus avoiding storage of O(N\u00b2) intermediates."
+        },
+        {
+          "claim": "The approach in 'Reducing Activation Recomputation in Large Transformer Models' selectively recomputes only parts of each transformer layer, specifically the attention operations after the Q, K, V linear layers, which have large activations but low FLOPs per input element.",
+          "supported": true,
+          "reason": "Passage [2] states that their approach is selective activation recomputation: checkpointing and recomputing only parts of each transformer layer, focusing on attention operations after the Q, K, V linear layers, which are described as having large activations but low FLOPs per input."
+        }
+      ],
+      "latency_ms": 2220.3621349999594,
+      "input_tokens": 2808,
+      "output_tokens": 334,
+      "cost_usd": 0.0016576,
+      "judge_cost_usd": 0.00447,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-005",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "ZeRO-Infinity reaches a per-GPU throughput of up to 49 TFlops on NVIDIA V100 GPUs for models up to 20 trillion parameters, with a performance drop at extreme scale due to batch size limitations rather than NVMe bandwidth. The sources do not specify the exact per-GPU throughput on NVIDIA H100 GPUs.",
+      "cited_chunk_ids": [
+        "zero-infinity2021:21-8-2-model-size-and-speed:000"
+      ],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": 0.6666666666666666,
+      "judged_claims": [
+        {
+          "claim": "ZeRO-Infinity reaches a per-GPU throughput of up to 49 TFlops on NVIDIA V100 GPUs for models up to 20 trillion parameters.",
+          "supported": false,
+          "reason": "The passage states 49 TFlops/GPU for ZeRO-Infinity at 20 trillion parameters, but does not specify that this is on NVIDIA V100 GPUs."
+        },
+        {
+          "claim": "There is a performance drop at extreme scale due to batch size limitations rather than NVMe bandwidth.",
+          "supported": true,
+          "reason": "The passage states the drop is due to a small batch size per GPU and not NVMe bandwidth."
+        },
+        {
+          "claim": "The sources do not specify the exact per-GPU throughput on NVIDIA H100 GPUs.",
+          "supported": true,
+          "reason": "The passage does not mention H100 GPUs or their throughput."
+        }
+      ],
+      "latency_ms": 1568.7568110000711,
+      "input_tokens": 2350,
+      "output_tokens": 207,
+      "cost_usd": 0.0012712,
+      "judge_cost_usd": 0.002528,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-006",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "The sources do not provide any information about PipeDream-2BW's performance on TPU v4 pods.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 643.4746510000195,
+      "input_tokens": 2335,
+      "output_tokens": 32,
+      "cost_usd": 0.0009852,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-007",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "The sources do not provide any information or data comparing the energy usage of FSDP and DDP.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 693.4924450000608,
+      "input_tokens": 2342,
+      "output_tokens": 32,
+      "cost_usd": 0.0009880000000000002,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-008",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "The sources do not mention evaluation of rematerialization on Mamba or other state-space models.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 634.6768500000053,
+      "input_tokens": 2281,
+      "output_tokens": 30,
+      "cost_usd": 0.0009604000000000001,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-009",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": true,
+      "refusal_reason": "The sources do not report the accuracy of ActNN when training GPT-3 with 2-bit activations.",
+      "answer": null,
+      "cited_chunk_ids": [],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": null,
+      "judged_claims": [],
+      "latency_ms": 859.3133859999398,
+      "input_tokens": 2361,
+      "output_tokens": 33,
+      "cost_usd": 0.0009972,
+      "judge_cost_usd": 0.0,
+      "dropped_citations": 0,
+      "dropped_quotes": [],
+      "error": null
+    },
+    {
+      "id": "unans-010",
+      "kind": "unanswerable",
+      "should_refuse": true,
+      "refused": false,
+      "refusal_reason": null,
+      "answer": "vDNN reduces the average GPU memory usage of transformer language models significantly, enabling training of very deep networks that would otherwise not fit in GPU memory. For example, vDNN enables training VGG-16 with batch size 256 (requiring 28 GB) on a 12 GB GPU, showing up to 89% to 95% memory reduction for other networks like AlexNet, OverFeat, and GoogLeNet. This implies substantial memory savings for large transformer models as well.",
+      "cited_chunk_ids": [
+        "vdnn2016:00-front-matter:000"
+      ],
+      "citation_precision": null,
+      "citation_precision_page": null,
+      "citation_hit": null,
+      "wrong_paper_citation": null,
+      "faithfulness": 0.6,
+      "judged_claims": [
+        {
+          "claim": "vDNN reduces the average GPU memory usage of transformer language models significantly.",
+          "supported": false,
+          "reason": "The passages discuss vDNN in the context of networks like AlexNet, OverFeat, GoogLeNet, and VGG-16, but do not mention transformer language models."
+        },
+        {
+          "claim": "vDNN enables training of very deep networks that would otherwise not fit in GPU memory.",
+          "supported": true,
+          "reason": "The passage states that vDNN enables training larger DNNs that otherwise wouldn't fit into GPU memory."
+        },
+        {
+          "claim": "vDNN enables training VGG-16 with batch size 256 (requiring 28 GB) on a 12 GB GPU.",
+          "supported": true,
+          "reason": "The passage explicitly says vDNN enables VGG-16 with batch size 256 (requiring 28 GB) to be trained on a 12 GB GPU."
+        },
+        {
+          "claim": "vDNN shows up to 89% to 95% memory reduction for networks like AlexNet, OverFeat, and GoogLeNet.",
+          "supported": true,
+          "reason": "The passage states reductions of 89% for AlexNet, 91% for OverFeat, and 95% for GoogLeNet."
+        },
+        {
+          "claim": "This implies substantial memory savings for large transformer models as well.",
+          "supported": false,
+          "reason": "The passage does not mention transformer models or imply results for them; this is an extrapolation."
+        }
+      ],
+      "latency_ms": 2082.0126760000903,
+      "input_tokens": 2649,
+      "output_tokens": 297,
+      "cost_usd": 0.0015348000000000002,
+      "judge_cost_usd": 0.00364,
+      "dropped_citations": 1,
+      "dropped_quotes": [
+        "We observe that such memory underutilization issue becomes more severe for deeper networks, leading to 53% to 79% of allocated memory not being used at all at any given time. The goal of vDNN is to co"
+      ],
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "citation_precision": 0.4713114754098361,
+  "refusal_accuracy": 0.9324324324324325,
+  "faithfulness": 0.9526455026455026,
+  "_questions": 74,
+  "_labels": "provisional"
+}

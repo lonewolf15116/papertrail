@@ -1,0 +1,50 @@
+{
+  "provisional": true,
+  "n_questions": 74,
+  "n_errors": 0,
+  "n_answerable": 64,
+  "n_unanswerable": 10,
+  "refusal_accuracy": 0.9324324324324325,
+  "false_refusal_rate": 0.046875,
+  "false_answer_rate": 0.2,
+  "citation_precision": 0.4713114754098361,
+  "citation_precision_page": 0.48633879781420764,
+  "citation_hit_rate": 0.6557377049180327,
+  "wrong_paper_citation_rate": 0.08196721311475409,
+  "faithfulness": 0.9526455026455026,
+  "citations_dropped_total": 18,
+  "by_kind": {
+    "cross_paper": {
+      "n": 15,
+      "refused": 0,
+      "citation_precision": 0.36666666666666664,
+      "wrong_paper_citation_rate": 0.13333333333333333,
+      "faithfulness": 0.9833333333333333
+    },
+    "factual": {
+      "n": 49,
+      "refused": 3,
+      "citation_precision": 0.5054347826086957,
+      "wrong_paper_citation_rate": 0.06521739130434782,
+      "faithfulness": 0.9565217391304348
+    },
+    "unanswerable": {
+      "n": 10,
+      "refused": 8,
+      "citation_precision": null,
+      "wrong_paper_citation_rate": null,
+      "faithfulness": 0.6333333333333333
+    }
+  },
+  "latency_p50_ms": 1553.1208259999403,
+  "latency_p95_ms": 2690.8887520000917,
+  "mean_input_tokens": 2371.364864864865,
+  "mean_output_tokens": 192.71621621621622,
+  "mean_cost_usd": 0.001256891891891892,
+  "total_judge_cost_usd": 0.216772,
+  "answer_model": "gpt-4.1-mini",
+  "answer_provider": "openai",
+  "judge_model": "gpt-4.1",
+  "judge_provider": "openai",
+  "retriever": "hybrid_header"
+}
