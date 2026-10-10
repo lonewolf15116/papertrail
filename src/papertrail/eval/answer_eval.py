@@ -118,6 +118,7 @@ class AnswerResult:
     answer: str | None = None
     cited_chunk_ids: list[str] = field(default_factory=list)
     citation_precision: float | None = None
+    citation_precision_page: float | None = None  # lenient: cited the labelled page, not chunk
     citation_hit: bool | None = None
     wrong_paper_citation: bool | None = None
     faithfulness: float | None = None
@@ -128,6 +129,7 @@ class AnswerResult:
     cost_usd: float = 0.0
     judge_cost_usd: float = 0.0
     dropped_citations: int = 0
+    dropped_quotes: list[str] = field(default_factory=list)
     error: str | None = None
 
 
@@ -185,10 +187,16 @@ def evaluate_answers(
             output_tokens=resp.output_tokens or 0,
             cost_usd=resp.estimated_cost_usd or 0.0,
             dropped_citations=resp.dropped_citations,
+            dropped_quotes=resp.dropped_quotes,
         )
         if not refused and not should_refuse:
             gold_ids = index.gold_chunk_ids(q)
             r.citation_precision = citation_precision(r.cited_chunk_ids, gold_ids)
+            gold_pages = {(e.paper_id, e.page) for e in q.evidence}
+            if resp.citations:
+                r.citation_precision_page = sum(
+                    (c.paper_id, c.page) in gold_pages for c in resp.citations
+                ) / len(resp.citations)
             r.citation_hit = bool(gold_ids.intersection(r.cited_chunk_ids))
             gold_papers = set(q.gold_paper_ids)
             r.wrong_paper_citation = any(c.paper_id not in gold_papers for c in resp.citations)
@@ -234,6 +242,9 @@ def summarize(results: Sequence[AnswerResult], provisional: bool) -> dict[str, A
         ),
         "citation_precision": _mean_or_none(
             [r.citation_precision for r in answered if r.citation_precision is not None]
+        ),
+        "citation_precision_page": _mean_or_none(
+            [r.citation_precision_page for r in answered if r.citation_precision_page is not None]
         ),
         "citation_hit_rate": _mean_or_none(
             [float(r.citation_hit) for r in answered if r.citation_hit is not None]
@@ -290,7 +301,8 @@ def markdown_table(s: dict[str, Any]) -> str:
         ("Refusal accuracy", _fmt(s["refusal_accuracy"])),
         ("False-answer rate (unanswerable questions answered)", _fmt(s["false_answer_rate"])),
         ("False-refusal rate (answerable questions refused)", _fmt(s["false_refusal_rate"])),
-        ("Citation precision", _fmt(s["citation_precision"])),
+        ("Citation precision (exact chunk)", _fmt(s["citation_precision"])),
+        ("Citation precision (labelled page)", _fmt(s.get("citation_precision_page"))),
         ("Citation hit rate", _fmt(s["citation_hit_rate"])),
         ("Wrong-paper citation rate", _fmt(s["wrong_paper_citation_rate"])),
         ("Faithfulness (LLM judge)", _fmt(s["faithfulness"])),

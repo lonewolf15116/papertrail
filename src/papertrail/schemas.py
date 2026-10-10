@@ -49,6 +49,9 @@ class AskResponse(BaseModel):
     dropped_citations: int = Field(
         default=0, description="Citations the model gave that failed verbatim-quote verification"
     )
+    dropped_quotes: list[str] = Field(
+        default_factory=list, description="The quotes behind dropped_citations, for debugging"
+    )
 
     @model_validator(mode="after")
     def _consistent(self) -> "AskResponse":

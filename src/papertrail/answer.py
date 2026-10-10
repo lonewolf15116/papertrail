@@ -9,6 +9,8 @@ a passage it did not use. An answer left with no verifiable citation becomes a r
 from __future__ import annotations
 
 import json
+import re
+import unicodedata
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol
@@ -214,23 +216,65 @@ def render_user_message(question: str, chunks: Sequence[Chunk], titles: dict[str
     return "\n".join(parts)
 
 
+_MATH_SYMBOLS = {
+    "√": "sqrt",
+    "∞": "infty",
+    "×": "times",
+    "≤": "leq",
+    "≥": "geq",
+    "≈": "approx",
+    "∑": "sum",
+    "∏": "prod",
+    "·": "cdot",
+    "⋅": "cdot",
+}
+# LaTeX that only changes how text looks; PDF text extraction never contains it.
+_LATEX_STYLE = re.compile(
+    r"\\(?:text|mathrm|mathbf|mathit|mathcal|operatorname|left|right|big|Big)(?![a-zA-Z])"
+)
+
+
+def squash_math(text: str) -> str:
+    """Like `squash`, but also treats LaTeX and the Unicode symbols a PDF extracts for it alike.
+
+    A model often writes `B = \\Omega(\\sqrt{N})` for a passage the PDF extracted as `B = Ω(√N)`;
+    plain `squash` turns those into different strings, so a correct quote is dropped. Both sides are
+    mapped to the same ASCII names (`omega`, `sqrt`, ...). Used only to verify citations, never to
+    resolve gold labels, so the retrieval metrics and the CI gate are unaffected.
+    """
+    t = unicodedata.normalize("NFKC", text)
+    t = _LATEX_STYLE.sub("", t)
+    t = re.sub(r"\\le(?![a-zA-Z])", r"\\leq", t)
+    t = re.sub(r"\\ge(?![a-zA-Z])", r"\\geq", t)
+    out: list[str] = []
+    for ch in t:
+        if ch in _MATH_SYMBOLS:
+            out.append(_MATH_SYMBOLS[ch])
+        elif unicodedata.name(ch, "").startswith("GREEK "):
+            out.append(unicodedata.name(ch).split()[-1].lower())  # GREEK CAPITAL LETTER OMEGA
+        else:
+            out.append(ch)
+    return squash("".join(out))
+
+
 def quote_in_chunk(quote: str, chunk: Chunk) -> bool:
-    """Whether `quote` appears in the chunk, ignoring case, spacing, hyphenation and punctuation."""
-    q = squash(quote)
-    return len(q) >= MIN_QUOTE_CHARS and q in squash(chunk.text)
+    """Whether `quote` appears in the chunk, ignoring case, spacing, hyphenation, punctuation
+    and the LaTeX-versus-Unicode spelling of math."""
+    q = squash_math(quote)
+    return len(q) >= MIN_QUOTE_CHARS and q in squash_math(chunk.text)
 
 
-def validate_citations(raw: object, chunks: Sequence[Chunk]) -> tuple[list[Citation], int]:
+def check_citations(raw: object, chunks: Sequence[Chunk]) -> tuple[list[Citation], list[str]]:
     """Keep citations whose source number is valid and whose quote is really in that chunk.
 
-    Returns (valid citations, number dropped). Duplicates of the same (source, quote) are merged
-    silently, not counted as dropped.
+    Returns (valid citations, the quotes dropped). Duplicates of the same (source, quote) are
+    merged silently, not counted as dropped.
     """
     if not isinstance(raw, list):
-        return [], 0
+        return [], []
     valid: list[Citation] = []
     seen: set[tuple[int, str]] = set()
-    dropped = 0
+    dropped: list[str] = []
     for item in raw:
         source = item.get("source") if isinstance(item, dict) else None
         quote = item.get("quote") if isinstance(item, dict) else None
@@ -241,7 +285,7 @@ def validate_citations(raw: object, chunks: Sequence[Chunk]) -> tuple[list[Citat
             or not 1 <= source <= len(chunks)
             or not quote_in_chunk(quote, chunks[source - 1])
         ):
-            dropped += 1
+            dropped.append(quote[:200] if isinstance(quote, str) else repr(item)[:200])
             continue
         key = (source, squash(quote))
         if key in seen:
@@ -258,6 +302,12 @@ def validate_citations(raw: object, chunks: Sequence[Chunk]) -> tuple[list[Citat
             )
         )
     return valid, dropped
+
+
+def validate_citations(raw: object, chunks: Sequence[Chunk]) -> tuple[list[Citation], int]:
+    """`check_citations`, reporting only how many citations were dropped."""
+    valid, dropped = check_citations(raw, chunks)
+    return valid, len(dropped)
 
 
 def build_response(
@@ -277,7 +327,8 @@ def build_response(
     }
     answer = data.get("answer")
     answer = answer.strip() if isinstance(answer, str) else ""
-    citations, dropped = validate_citations(data.get("citations"), chunks)
+    citations, dropped_quotes = check_citations(data.get("citations"), chunks)
+    dropped = len(dropped_quotes)
 
     if data.get("can_answer") is True and answer and citations:
         return AskResponse(
@@ -285,6 +336,7 @@ def build_response(
             answer=answer,
             citations=citations,
             dropped_citations=dropped,
+            dropped_quotes=dropped_quotes,
             **common,
         )
 
@@ -302,5 +354,6 @@ def build_response(
         status=AnswerStatus.REFUSED,
         refusal_reason=reason.strip(),
         dropped_citations=dropped,
+        dropped_quotes=dropped_quotes,
         **common,
     )

@@ -205,3 +205,29 @@ def test_spotcheck_is_seeded_and_leaves_human_verdict_blank():
     assert one == two and len(one) == 2
     assert all(row["human_supported"] is None and row["cited_passages"] for row in one)
     assert len(spotcheck_sample(results, by_id, BY_ID, n=50)) == 3  # only judged answers
+
+
+def test_page_level_precision_credits_a_neighbouring_chunk_on_the_labelled_page():
+    # The label points at page 3; the model cites a different chunk that is also on page 3.
+    other = Chunk(chunk_id="dtr:2", paper_id="dtr", section="3", page=3, text="Other text.")
+    gold = [
+        GoldQuestion(
+            id="p",
+            question="question p?",
+            kind=QuestionKind.FACTUAL,
+            evidence=[Evidence(paper_id="dtr", page=3, quote=DTR_TEXT)],
+        )
+    ]
+    got = evaluate_answers(
+        FakeAsker({"question p?": answered(other)}),
+        None,
+        gold,
+        EvidenceIndex([*CHUNKS, other]),
+        {**BY_ID, "dtr:2": other},
+        TITLES,
+    )[0]
+    assert got.citation_precision == 0.0  # exact chunk: wrong
+    assert got.citation_precision_page == 1.0  # labelled page: right
+    s = summarize([got], provisional=True)
+    assert s["citation_precision_page"] == 1.0
+    assert "labelled page" in markdown_table(s)

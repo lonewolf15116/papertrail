@@ -164,3 +164,64 @@ def test_prompt_tells_the_model_to_refuse_near_miss_questions():
     from papertrail.answer import SYSTEM_PROMPT
 
     assert "exact thing" in SYSTEM_PROMPT and "similar thing" in SYSTEM_PROMPT
+
+
+def _chunk(text: str):
+    from papertrail.schemas import Chunk
+
+    return Chunk(chunk_id="p:1", paper_id="p", section="s", page=1, text=text)
+
+
+@pytest.mark.parametrize(
+    "quote, passage",
+    [
+        (
+            r"a memory budget of B = \Omega(\sqrt{N}) to train",
+            "DTR needs a memory budget of B = Ω(√N) to train a network.",
+        ),
+        (r"memory \le B \leq 2B", "We require memory ≤ B ≤ 2B at all times in the schedule."),
+        (
+            r"\text{cost} \times \mathrm{size}",
+            "The heuristic multiplies cost × size for each tensor.",
+        ),
+        (
+            r"combined as \alpha + \beta before normalising",
+            "the weights are combined as α + β before normalising",
+        ),
+    ],
+)
+def test_quote_check_treats_latex_and_extracted_unicode_math_alike(quote, passage):
+    from papertrail.answer import quote_in_chunk
+
+    assert quote_in_chunk(quote, _chunk(passage))
+
+
+def test_quote_check_still_rejects_a_different_formula():
+    from papertrail.answer import quote_in_chunk
+
+    chunk = _chunk("DTR needs a memory budget of B = Ω(√N) to train a network.")
+    assert not quote_in_chunk(r"B = \Omega(N^2)", chunk)  # different math, must not match
+    assert not quote_in_chunk(r"\Omega", chunk)  # too short to verify anything
+
+
+def test_dropped_quotes_are_returned_for_debugging():
+    from papertrail.answer import build_response
+    from papertrail.schemas import AnswerStatus
+
+    chunk = _chunk("DTR evicts the tensor that is stalest, largest, and cheapest to rematerialize.")
+    gen = Generation(
+        {
+            "can_answer": True,
+            "answer": "x",
+            "citations": [
+                {"source": 1, "quote": "evicts the tensor that is stalest, largest"},
+                {"source": 1, "quote": "this sentence is not in the passage at all"},
+            ],
+        },
+        10,
+        10,
+    )
+    resp = build_response([chunk], gen, (0.0, 0.0))
+    assert resp.status is AnswerStatus.ANSWERED
+    assert resp.dropped_citations == 1
+    assert resp.dropped_quotes == ["this sentence is not in the passage at all"]

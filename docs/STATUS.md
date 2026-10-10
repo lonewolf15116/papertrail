@@ -27,8 +27,8 @@ Read this first when starting a new session. Last updated 2026-10-10.
 
 **Next, in order:**
 1. Prompt rule 4a (refuse when the question names a model, hardware or metric the sources do not contain) is added in `answer.py` and pushed, but NOT yet verified: it has never been run against the model. Re-run the full evaluation and check unans-005/006/009/010 in `answers-results`; also check false refusals did not rise (the rule could make the model over-refuse). A unit test only guards that the rule text is present.
-2. Quote verification on math text: look at how `squash` treats LaTeX or PDF-extracted math before loosening it (the 5 false refusals).
-3. Citation precision: measure how much of the 0.49 is the metric (cited a neighbouring chunk of the same passage) versus real misses; consider scoring at page or section level as well.
+2. Quote verification on math text: DONE in code, NOT verified. `squash_math` in `answer.py` maps LaTeX (`\Omega`, `\sqrt`, `\le`, `\text{}`) and the Unicode a PDF extracts (`Ω`, `√`, `≤`) to the same ASCII, used only for citation checks (gold labels and the CI gate still use plain `squash`). This was a hypothesis about the 5 false refusals: the Claude sandbox cannot reach arXiv, so I could not read the real chunk text. The eval now records the dropped quotes (`dropped_quotes` in `answers-provisional.json`), so after the next run, read them for remat-003, remat-010, pipe-006, pipe-008, cross-006, cross-015 to see what actually failed.
+3. Citation precision: a lenient page-level score (`citation_precision_page`: cited the labelled page rather than the exact chunk) now sits next to the exact-chunk score in the table. The gap between the two is how much of the 0.49 is the metric. Section-level scoring is not done.
 4. Read the spot-check sample by hand; a second judge from another vendor would be better than a same-vendor one.
 5. Re-run after the gold set is verified (7 needs-fix questions), then deploy and record p50/p95 latency and cost.
 
