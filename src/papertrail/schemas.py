@@ -39,8 +39,16 @@ class AskResponse(BaseModel):
     citations: list[Citation] = Field(default_factory=list)
     refusal_reason: str | None = None
     latency_ms: float | None = None
+    retrieval_ms: float | None = None
     input_tokens: int | None = None
     output_tokens: int | None = None
+    estimated_cost_usd: float | None = None
+    retrieved_chunk_ids: list[str] = Field(
+        default_factory=list, description="Chunks shown to the model, in rank order"
+    )
+    dropped_citations: int = Field(
+        default=0, description="Citations the model gave that failed verbatim-quote verification"
+    )
 
     @model_validator(mode="after")
     def _consistent(self) -> "AskResponse":

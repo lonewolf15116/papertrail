@@ -1,0 +1,84 @@
+name: Answer evaluation
+
+# Manual only: every run calls the Anthropic API (answers + faithfulness judge) and costs money.
+# Needs the repository secret ANTHROPIC_API_KEY. Results are uploaded as a run artifact.
+on:
+  workflow_dispatch:
+    inputs:
+      include_drafts:
+        description: "Score draft labels too (provisional numbers)"
+        type: boolean
+        default: true
+      limit:
+        description: "Only the first N questions (blank = all)"
+        type: string
+        default: ""
+
+jobs:
+  answers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: papertrail
+          POSTGRES_PASSWORD: papertrail
+          POSTGRES_DB: papertrail
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U papertrail" --health-interval 5s --health-retries 10
+    env:
+      PAPERTRAIL_DATABASE_URL: postgresql://papertrail:papertrail@localhost:5432/papertrail
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Check the API key is configured
+        run: test -n "$ANTHROPIC_API_KEY" || { echo "Add the ANTHROPIC_API_KEY repository secret"; exit 1; }
+
+      - name: Install (CPU-only PyTorch)
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev,retrieval]"
+
+      - name: Cache corpus PDFs
+        uses: actions/cache@v4
+        with:
+          path: data/corpus/pdf
+          key: corpus-${{ hashFiles('data/corpus/papers.yaml') }}
+      - name: Download corpus
+        run: python scripts/download_corpus.py
+      - name: Cache models
+        uses: actions/cache@v4
+        with:
+          path: models
+          key: models-${{ hashFiles('scripts/download_models.py') }}
+      - name: Download models
+        run: python scripts/download_models.py
+
+      - name: Ingest and index
+        run: |
+          papertrail-ingest
+          psql "$PAPERTRAIL_DATABASE_URL" -f scripts/init.sql
+          papertrail-index
+
+      - name: Score answers
+        env:
+          INCLUDE_DRAFTS: ${{ inputs.include_drafts }}
+          LIMIT: ${{ inputs.limit }}
+        run: |
+          args=()
+          if [ "$INCLUDE_DRAFTS" = "true" ]; then args+=(--include-drafts); fi
+          if [[ "$LIMIT" =~ ^[0-9]+$ ]]; then args+=(--limit "$LIMIT"); fi
+          papertrail-eval-answers "${args[@]}" --out results/answers
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: answer-eval-results
+          path: results/answers

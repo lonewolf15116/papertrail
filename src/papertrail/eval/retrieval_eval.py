@@ -148,7 +148,9 @@ def markdown_table(rows: Sequence[RetrieverResult]) -> str:
     return head + body
 
 
-def build_retrievers(names: Sequence[str], chunks: Sequence[Chunk]) -> list[Retriever]:
+def build_retrievers(
+    names: Sequence[str], chunks: Sequence[Chunk], titles: dict[str, str] | None = None
+) -> list[Retriever]:
     from papertrail.config import get_settings
     from papertrail.retrieval import (
         BM25Retriever,
@@ -161,6 +163,8 @@ def build_retrievers(names: Sequence[str], chunks: Sequence[Chunk]) -> list[Retr
     settings = get_settings()
 
     def paper_titles() -> dict[str, str]:
+        if titles is not None:
+            return titles
         from papertrail.index import load_papers
 
         return {p["id"]: p["title"] for p in load_papers(Path("data/corpus/papers.yaml"))}

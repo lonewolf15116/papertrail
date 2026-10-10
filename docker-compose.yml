@@ -24,6 +24,9 @@ services:
         required: false
     ports:
       - "8000:8000"
+    volumes:
+      # filled by scripts/download_models.py; without it models download on the first request
+      - ./models:/app/models:ro
     depends_on:
       db:
         condition: service_healthy

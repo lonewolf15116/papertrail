@@ -12,7 +12,7 @@ hand-labelled question set, and CI fails the build if quality regresses.
 |---|---|---|
 | 1. Corpus + gold set | 24 papers, 60–100 labelled questions incl. unanswerable and cross-paper | 23 papers ingested (1,074 chunks); 74 questions, 12 verified so far |
 | 2. Retrieval ablations | BM25 → vectors → hybrid (RRF) → cross-encoder rerank; recall@5, MRR | done; runs in CI with a regression gate |
-| 3. Grounded answers | FastAPI `/ask` with paper/page/section citations and a refusal path | stub |
+| 3. Grounded answers | FastAPI `/ask` with paper/page/section citations and a refusal path | built and unit-tested; first scored run pending ([`answers-eval.yml`](.github/workflows/answers-eval.yml), manual) |
 | 4. Ship | Docker Compose, CI quality gate, deployment, p50/p95 latency and cost | CI, Docker and the retrieval gate in place |
 | Later | Agent tools: `search_papers`, `fetch_section`, `compare_papers` | — |
 
@@ -82,6 +82,11 @@ make up             # Postgres + pgvector and the API on :8000
 papertrail-index                     # chunks + embeddings into pgvector
 papertrail-eval-retrieval --include-drafts   # the retrieval ablation table
 curl localhost:8000/health
+
+export ANTHROPIC_API_KEY=...        # the answer step and the faithfulness judge call the API
+curl -s localhost:8000/ask -H 'content-type: application/json' \
+  -d '{"question": "Which tensor does DTR evict?"}'
+papertrail-eval-answers --include-drafts --limit 10   # cheap trial run of the answer evaluation
 ```
 
 ## Layout
@@ -89,6 +94,8 @@ curl localhost:8000/health
 ```
 src/papertrail/
   api.py            FastAPI service (/health, /ask)
+  pipeline.py       retrieve -> grounded answer; per-request structured log (latency, tokens, cost)
+  answer.py         prompt, forced tool-call output, citation verification, refusal rule
   schemas.py        Pydantic contracts: chunks, citations, answers, gold questions
   ingest.py         PDF -> sections -> chunks (section-aware, page-accurate, references dropped)
   retrieval.py      Retriever interface + reciprocal rank fusion
@@ -96,10 +103,26 @@ src/papertrail/
   eval/evidence.py  maps labelled quotes to chunk ids under any chunking
   eval/gate.py      CI regression gate
   eval/run.py       papertrail-eval entry point
+  eval/answer_eval.py  papertrail-eval-answers: refusal, citation and faithfulness scores
 data/corpus/papers.yaml   corpus manifest (PDFs are git-ignored)
 data/gold/                hand-labelled questions (see its README)
 scripts/init.sql          pgvector schema with full-text and HNSW indexes
 ```
+
+## How answers are grounded
+
+`/ask` retrieves the top 5 chunks (hybrid + headers, the Week 2 default) and gives them to the model as
+numbered sources. The model must call one tool: either an answer whose claims carry citations (a source
+number and a quote copied from that source), or a refusal with a reason.
+
+The quote is checked, not trusted. A citation survives only if its quote appears in the chunk it names
+(ignoring case, spacing and hyphenation); the response carries the chunk's real paper, section and page.
+If an answer is left with no verifiable citation it is turned into a refusal, so the service never returns
+an uncited answer. The model never sees the gold labels, and the number of citations dropped is reported on
+every response (`dropped_citations`) and in the evaluation.
+
+Failure modes by design: no key or empty index returns 503 (and `/health` still works); an LLM or database
+error returns 502; a malformed request is a 422 regardless.
 
 ## Evaluation design
 
