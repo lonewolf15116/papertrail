@@ -257,11 +257,30 @@ def squash_math(text: str) -> str:
     return squash("".join(out))
 
 
+_ELLIPSIS = re.compile(r"\.{3,}|\u2026")
+
+
 def quote_in_chunk(quote: str, chunk: Chunk) -> bool:
     """Whether `quote` appears in the chunk, ignoring case, spacing, hyphenation, punctuation
-    and the LaTeX-versus-Unicode spelling of math."""
-    q = squash_math(quote)
-    return len(q) >= MIN_QUOTE_CHARS and q in squash_math(chunk.text)
+    and the LaTeX-versus-Unicode spelling of math.
+
+    A quote may join passages with an ellipsis ("A ... B"), which models do constantly. Each
+    fragment long enough to verify anything must then appear verbatim in the chunk, in order;
+    fragments shorter than MIN_QUOTE_CHARS carry no weight, and a quote with no long fragment
+    is rejected, so an ellipsis cannot be used to smuggle in unverified text of any length.
+    """
+    fragments = [squash_math(f) for f in _ELLIPSIS.split(quote)]
+    fragments = [f for f in fragments if len(f) >= MIN_QUOTE_CHARS]
+    if not fragments:
+        return False
+    haystack = squash_math(chunk.text)
+    pos = 0
+    for f in fragments:
+        i = haystack.find(f, pos)
+        if i < 0:
+            return False
+        pos = i + len(f)
+    return True
 
 
 def check_citations(raw: object, chunks: Sequence[Chunk]) -> tuple[list[Citation], list[str]]:

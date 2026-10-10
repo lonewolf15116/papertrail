@@ -225,3 +225,42 @@ def test_dropped_quotes_are_returned_for_debugging():
     assert resp.status is AnswerStatus.ANSWERED
     assert resp.dropped_citations == 1
     assert resp.dropped_quotes == ["this sentence is not in the passage at all"]
+
+
+_TWO_PASSAGES = (
+    "ZeRO-Infinity is built on top of ZeRO-3, which partitions all model states to remove "
+    "memory redundancy. Several unrelated sentences sit between the two passages here. "
+    "ZeRO-Infinity is designed with a powerful offload mechanism for the model states."
+)
+
+
+@pytest.mark.parametrize("ellipsis", ["...", " ... ", "…", "....."])
+def test_quote_with_an_ellipsis_is_verified_fragment_by_fragment(ellipsis):
+    from papertrail.answer import quote_in_chunk
+
+    quote = (
+        "ZeRO-Infinity is built on top of ZeRO-3, which partitions all model states"
+        f"{ellipsis}ZeRO-Infinity is designed with a powerful offload mechanism"
+    )
+    assert quote_in_chunk(quote, _chunk(_TWO_PASSAGES))
+
+
+@pytest.mark.parametrize(
+    "quote",
+    [
+        # fragments out of order
+        "ZeRO-Infinity is designed with a powerful offload mechanism ... "
+        "ZeRO-Infinity is built on top of ZeRO-3, which partitions all model states",
+        # one real fragment, one invented
+        "ZeRO-Infinity is built on top of ZeRO-3, which partitions all model states ... "
+        "and it also triples the throughput on every GPU ever made",
+        # only short fragments: nothing verifiable
+        "ZeRO ... states ... offload",
+        # a short quote is still rejected with or without an ellipsis
+        "ZeRO-3 ...",
+    ],
+)
+def test_ellipsis_does_not_let_unverified_text_through(quote):
+    from papertrail.answer import quote_in_chunk
+
+    assert not quote_in_chunk(quote, _chunk(_TWO_PASSAGES))
